@@ -14,6 +14,22 @@
         .admin-footer { margin-top: 40px; padding: 20px; border-top: 2px solid #333; background: #eee; border-radius: 8px; }
         .admin-footer a { color: #333; margin-right: 15px; text-decoration: none; font-weight: bold; }
         .admin-footer a:hover { color: #ff4500; }
+
+        /* Стиль для кнопки выхода, чтобы она выглядела как ссылка */
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-weight: bold;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+        .logout-btn:hover {
+            color: #ff4500;
+        }
     </style>
 </head>
 <body>
@@ -48,7 +64,10 @@
         <a href="{% url 'stats' %}">📊 Аналитика</a> |
         <a href="#">👤 Пользователи</a> |
         <a href="/admin/">⚙️ Админка</a> |
-        <a href="{% url 'logout' %}">🚪 Выйти</a>
+        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">🚪 Выйти</button>
+        </form>
     {% else %}
         <a href="/admin/">🔒 Вход в Админку</a>
     {% endif %}
