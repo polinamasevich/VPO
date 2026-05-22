@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin: auto; padding: 20px;">
+    <h2 style="text-align: center;">🔥 Наши активные промокоды</h2>
+    <p style="text-align: center;">Используйте эти коды при оформлении заказа, чтобы получить скидку:</p>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: center;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd; background-color: #f8f9fa;">
+                <th style="padding: 12px;">Код</th>
+                <th style="padding: 12px;">Скидка</th>
+                <th style="padding: 12px;">Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in promocodes %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold; color: #ff4500;">{{ p.code }}</td>
+                <td style="padding: 12px;">{{ p.discount }}%</td>
+                <td style="padding: 12px;">{{ p.description|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Мой словарь</h1>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="padding: 10px; text-align: left;">Вопрос</th>
+                <th style="padding: 10px; text-align: left;">Ответ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in words %}
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>{{ item.word }}</strong></td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ item.definition }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" style="padding: 20px; text-align: center;">В базе пока нет слов.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

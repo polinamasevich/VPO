@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 20px;">
+    
+    {% if company_info and company_info.image %}
+        <div style="position: relative; overflow: hidden; border-radius: 6px; margin-bottom: 25px;">
+            <img src="{{ company_info.image.url }}" alt="{{ company_info.name }}" style="width: 100%; height: 400px; object-fit: cover;">
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%); padding: 20px;">
+                <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                    🍕 О нашей пиццерии PizzaTime
+                </h1>
+            </div>
+        </div>
+    {% else %}
+        <div style="background: #ff4500; color: white; padding: 40px 20px; border-radius: 6px; margin-bottom: 25px; text-align: center;">
+            <h1 style="margin: 0; font-size: 32px; font-weight: bold;">🍕 О нашей пиццерии PizzaTime</h1>
+            <p style="margin-top: 10px;">Загрузите фото в админке (раздел Company Info)</p>
+        </div>
+    {% endif %}
+
+    <div style="font-size: 16px; line-height: 1.8; color: #333; margin-top: 15px;">
+        <p>Добро пожаловать в нашу уютную пиццерию! Мы открылись, чтобы радовать вас самой сочной, горячей и ароматной пиццей в Минске. Наша команда ежедневно трудится над тем, чтобы каждый кусочек приносил вам истинное удовольствие.</p>
+        
+        <h3 style="color: #ff4500; margin-top: 25px; margin-bottom: 10px;">Наши главные секреты:</h3>
+        <ul style="padding-left: 20px; line-height: 2;">
+            <li><b>Фирменное тесто:</b> Мы готовим его по секретному итальянскому рецепту. Оно созревает в течение 48 часов, благодаря чему бортики получаются невероятно пышными и воздушными.</li>
+            <li><b>Свежие ингредиенты:</b> Настоящий сыр Моцарелла, спелые томаты и отборные мясные деликатесы от проверенных поставщиков.</li>
+            <li><b>Быстрая доставка:</b> Наши курьеры доставят заказ горячим прямо к вашей двери меньше чем за 45 минут!</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 35px 0;">
+
+    <h3 style="color: #333; margin-bottom: 25px; font-size: 22px; font-weight: bold;">📅 Наша История по Годам</h3>
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
+            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2019</div>
+            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Основание.</b> Мы начинали как крошечный семейный стартап. Наша первая команда состояла всего из 4 человек.</p>
+        </div>
+        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
+            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2020</div>
+            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Первая Печь.</b> Мы установили нашу легендарную дровяную печь. Наш шеф-пиццайоло представил соус "Карбонара", который стал сенсацией.</p>
+        </div>
+        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
+            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2021</div>
+            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Служба Доставки.</b> Несмотря на сложности, мы запустили свою первую круглосуточную службу доставки, которая завоевала любовь.</p>
+        </div>
+        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
+            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2022</div>
+            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Новое Меню.</b> Добавлены вегетарианские позиции и фирменная пицца. Наша команда выросла до 15 человек.</p>
+        </div>
+        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
+            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2023</div>
+            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Современность.</b> Полное обновление интерьера ресторана и запуск этого сайта. Наша большая команда — это 30 профессионалов.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

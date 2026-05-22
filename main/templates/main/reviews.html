@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>✍️ Оставить отзыв</h2>
+
+<form method="POST">
+    {% csrf_token %}  {{ form.as_p }}
+    <button type="submit">Отправить</button>
+</form>
+
+<hr>
+
+<h2>💬 Отзывы наших гостей</h2>
+{% for rev in reviews %}
+    <p><b>{{ rev.user_name }} (Оценка: {{ rev.rating }}/5):</b><br>
+    {{ rev.text }}</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PizzaTime</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+        .nav-container { background: #fff; padding: 15px; border: 2px solid #ff4500; border-radius: 8px; margin-bottom: 20px; }
+        .nav-links a { color: #ff4500; text-decoration: none; font-weight: bold; margin: 0 5px; }
+        .nav-links a:hover { text-decoration: underline; }
+        .content-block { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd; min-height: 200px; }
+        
+        /* Стили для нижней панели */
+        .admin-footer { margin-top: 40px; padding: 20px; border-top: 2px solid #333; background: #eee; border-radius: 8px; }
+        .admin-footer a { color: #333; margin-right: 15px; text-decoration: none; font-weight: bold; }
+        .admin-footer a:hover { color: #ff4500; }
+    </style>
+</head>
+<body>
+
+<div class="nav-container">
+    <h2 style="margin-top: 0;">🍕 Пиццерия "PizzaTime"</h2>
+    
+    <nav class="nav-links">
+        <a href="{% url 'index' %}">Главная</a> |
+        <a href="{% url 'item_list' %}">Меню</a> |
+        <a href="{% url 'reviews' %}">Отзывы гостей</a> |
+        <a href="{% url 'about' %}">О компании</a> |
+        <a href="{% url 'news_list' %}">Новости</a>
+        <a href="{% url 'contacts' %}">Контакты</a> |
+        <a href="{% url 'promocodes' %}">Промокоды и Купоны</a> |
+        <a href="{% url 'vacancies' %}">Вакансии</a> |
+        <a href="{% url 'terms' %}">Условия сотрудничества</a> |
+        <a href="{% url 'privacy' %}">Конфиденциальность</a> |
+        <a href="{% url 'dictionary' %}">Словарь</a>
+    </nav>
+</div>
+
+<div class="content-block">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="admin-footer">
+    <p><strong>Панель управления:</strong></p>
+    {% if user.is_authenticated %}
+        <span>Пользователь: {{ user.username }}</span> |
+        <a href="{% url 'stats' %}">📊 Аналитика</a> |
+        <a href="#">👤 Пользователи</a> |
+        <a href="/admin/">⚙️ Админка</a> |
+        <a href="{% url 'logout' %}">🚪 Выйти</a>
+    {% else %}
+        <a href="/admin/">🔒 Вход в Админку</a>
+    {% endif %}
+</footer>
+
+</body>
+</html>

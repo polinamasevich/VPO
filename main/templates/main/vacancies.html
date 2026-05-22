@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="padding: 20px; background: #fff; border-radius: 8px; margin-top: 20px;">
+    <h2 style="color: #ff4500;">💼 Открытые вакансии</h2>
+    <p>Мы растем и ищем талантливых людей в нашу команду!</p>
+    
+    {% for v in vacancies %}
+    <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
+        <h3 style="margin: 0; color: #005088;">{{ v.title }}</h3>
+        <p><b>Зарплата:</b> {{ v.salary }}</p>
+        <p>{{ v.description }}</p>
+    </div>
+    {% empty %}
+    <p>На данный момент открытых вакансий нет. Заходите позже!</p>
+    {% endfor %}
+</div>
+{% endblock %}

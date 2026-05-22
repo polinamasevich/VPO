@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>📊 Аналитика и Статистика сайта</h2>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; margin-bottom: 40px;">
+    
+    <div style="padding: 20px; background: #e6f7ff; border-radius: 8px; border-top: 4px solid #1890ff; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0; color: #555;">Услуги и Товары</h3>
+        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #1890ff;">{{ total_services }}</p>
+    </div>
+
+    <div style="padding: 20px; background: #f6ffed; border-radius: 8px; border-top: 4px solid #52c41a; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0; color: #555;">Всего новостей</h3>
+        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #52c41a;">{{ total_news }}</p>
+    </div>
+
+    <div style="padding: 20px; background: #fff7e6; border-radius: 8px; border-top: 4px solid #fa8c16; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0; color: #555;">Оставлено отзывов</h3>
+        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #fa8c16;">{{ total_reviews }}</p>
+    </div>
+
+    <div style="padding: 20px; background: #fff1f0; border-radius: 8px; border-top: 4px solid #f5222d; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0; color: #555;">Средний рейтинг</h3>
+        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #f5222d;">{{ avg_rating }} / 5</p>
+    </div>
+
+</div>
+
+<div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
+    
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center;">
+        <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Соотношение контента на сайте</h4>
+        <canvas id="contentChart"></canvas>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center;">
+        <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Уровень удовлетворенности (Рейтинг)</h4>
+        <div style="position: relative; margin: auto; height: 200px; width: 200px;">
+            <canvas id="ratingChart"></canvas>
+            <div style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <span style="font-size: 32px; font-weight: bold; color: #333;">{{ avg_rating }}</span><br>
+                <span style="color: #999; font-size: 14px;">из 5</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Настройка первого графика (Круговая диаграмма)
+    const ctxContent = document.getElementById('contentChart').getContext('2d');
+    new Chart(ctxContent, {
+        type: 'pie',
+        data: {
+            labels: ['Услуги/Товары', 'Новости', 'Отзывы'],
+            datasets: [{
+                data: [{{ total_services }}, {{ total_news }}, {{ total_reviews }}],
+                backgroundColor: ['#1890ff', '#52c41a', '#fa8c16'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Настройка второго графика (Полукруг для рейтинга)
+    const ctxRating = document.getElementById('ratingChart').getContext('2d');
+    // Переводим рейтинг в числовую форму для JS, если отзывов еще нет — ставим 0
+    const ratingValue = parseFloat("{{ avg_rating }}") || 0; 
+    
+    new Chart(ctxRating, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [ratingValue, 5 - ratingValue],
+                backgroundColor: ['#f5222d', '#f0f0f0'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '80%', // Делает кольцо тоньше
+            rotation: -90,  // Разворачивает, чтобы получился полукруг
+            circumference: 180,
+            plugins: {
+                tooltip: { enabled: false },
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+{% endblock %}

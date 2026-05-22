@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 20px;">
+    <h2 style="color: #ff4500; margin-top: 0;">📞 Контактная информация</h2>
+    <p>Возникли вопросы, пожелания или хотите сделать заказ по телефону? Мы всегда рады вашему звонку!</p>
+    
+    <div style="margin-top: 15px; line-height: 1.8;">
+        <p><b>🏢 Наш адрес:</b> г. Минск, ул. Гикало, д. 9</p>
+        <p><b>📱 Телефоны службы доставки:</b><br>
+            +375 (29) 123-45-67<br>
+            +375 (44) 765-43-21
+        </p>
+        <p><b>📧 Email:</b> info@pizzavariant19.by</p>
+    </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
+
+<h3 style="color: #333; margin-bottom: 20px;">👥 Наша Команда</h3>
+<div style="display: flex; gap: 25px; flex-wrap: wrap;">
+    {% for emp in employees %}
+        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; width: 230px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center;">
+            
+            {% if emp.image %}
+                <img src="{{ emp.image.url }}" alt="{{ emp.name }}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin: 0 auto 15px auto; border: 3px solid #ff4500;">
+            {% else %}
+                <div style="width: 120px; height: 120px; background: #eaeaea; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 40px;">
+                    👤
+                </div>
+            {% endif %}
+            
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 18px;">{{ emp.name }}</h4>
+            <p style="color: #ff4500; font-weight: bold; font-size: 14px; margin: 0 0 15px 0;">{{ emp.position }}</p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 10px; font-size: 13px; text-align: left; color: #555;">
+                <p style="margin: 3px 0;"><b>📞 Тел:</b> {{ emp.phone }}</p>
+                <p style="margin: 3px 0;"><b>✉️ Email:</b> <a href="mailto:{{ emp.email }}" style="color: #333; text-decoration: none;">{{ emp.email }}</a></p>
+            </div>
+        </div>
+    {% empty %}
+        <p style="color: #666;">Список сотрудников пока пуст.</p>
+    {% endfor %}
+</div>
+{% endblock %}
