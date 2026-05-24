@@ -1,56 +1,112 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>📊 Аналитика и Статистика сайта</h2>
+<div class="container" style="padding: 10px;">
+    <h2 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 10px; margin-bottom: 25px;">
+        📊 Панель аналитики и статистики сайта
+    </h2>
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; margin-bottom: 40px;">
-    
-    <div style="padding: 20px; background: #e6f7ff; border-radius: 8px; border-top: 4px solid #1890ff; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin: 0; color: #555;">Услуги и Товары</h3>
-        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #1890ff;">{{ total_services }}</p>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px;">
+        
+        <div style="padding: 20px; background: #e6f7ff; border-radius: 8px; border-top: 4px solid #1890ff; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0; color: #555; font-size: 16px;">Услуги и Товары</h3>
+            <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #1890ff;">{{ total_services }}</p>
+        </div>
+
+        <div style="padding: 20px; background: #f6ffed; border-radius: 8px; border-top: 4px solid #52c41a; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0; color: #555; font-size: 16px;">Всего новостей</h3>
+            <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #52c41a;">{{ total_news }}</p>
+        </div>
+
+        <div style="padding: 20px; background: #fff7e6; border-radius: 8px; border-top: 4px solid #fa8c16; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0; color: #555; font-size: 16px;">Оставлено отзывов</h3>
+            <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #fa8c16;">{{ total_reviews }}</p>
+        </div>
+
+        <div style="padding: 20px; background: #fff1f0; border-radius: 8px; border-top: 4px solid #f5222d; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0; color: #555; font-size: 16px;">Средний рейтинг</h3>
+            <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #f5222d;">{{ avg_rating }} / 5</p>
+        </div>
+
     </div>
 
-    <div style="padding: 20px; background: #f6ffed; border-radius: 8px; border-top: 4px solid #52c41a; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin: 0; color: #555;">Всего новостей</h3>
-        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #52c41a;">{{ total_news }}</p>
-    </div>
+    <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px;">
+        
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 380px; text-align: center; border: 1px solid #eee;">
+            <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Соотношение контента на сайте</h4>
+            <canvas id="contentChart"></canvas>
+        </div>
 
-    <div style="padding: 20px; background: #fff7e6; border-radius: 8px; border-top: 4px solid #fa8c16; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin: 0; color: #555;">Оставлено отзывов</h3>
-        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #fa8c16;">{{ total_reviews }}</p>
-    </div>
-
-    <div style="padding: 20px; background: #fff1f0; border-radius: 8px; border-top: 4px solid #f5222d; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin: 0; color: #555;">Средний рейтинг</h3>
-        <p style="font-size: 28px; font-weight: bold; margin: 10px 0; color: #f5222d;">{{ avg_rating }} / 5</p>
-    </div>
-
-</div>
-
-<div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
-    
-    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center;">
-        <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Соотношение контента на сайте</h4>
-        <canvas id="contentChart"></canvas>
-    </div>
-
-    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center;">
-        <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Уровень удовлетворенности (Рейтинг)</h4>
-        <div style="position: relative; margin: auto; height: 200px; width: 200px;">
-            <canvas id="ratingChart"></canvas>
-            <div style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                <span style="font-size: 32px; font-weight: bold; color: #333;">{{ avg_rating }}</span><br>
-                <span style="color: #999; font-size: 14px;">из 5</span>
+        <div style="background: white; padding: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; max-width: 380px; text-align: center; border: 1px solid #eee;">
+            <h4 style="margin-top: 0; margin-bottom: 20px; color: #333;">Уровень удовлетворенности</h4>
+            <div style="position: relative; margin: auto; height: 180px; width: 180px;">
+                <canvas id="ratingChart"></canvas>
+                <div style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <span style="font-size: 28px; font-weight: bold; color: #333;">{{ avg_rating }}</span><br>
+                    <span style="color: #999; font-size: 12px;">из 5</span>
+                </div>
             </div>
         </div>
+
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px;">
+        
+        <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex: 1; min-width: 300px;">
+            <h3 style="color: #1890ff; margin-top: 0; font-size: 18px;">💰 Экономические показатели лабы</h3>
+            <p><strong>Общая сумма продаж (расчетная):</strong> {{ total_sales_sum }} BYN</p>
+            <p><strong>Средний чек ассортимента:</strong> {{ sales_avg }} BYN</p>
+            <p><strong>Медиана по ценам товаров:</strong> {{ sales_median }} BYN</p>
+            <p><strong>Мода по ценам товаров (частая цена):</strong> {{ sales_mode }} BYN</p>
+        </div>
+
+        <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex: 1; min-width: 300px;">
+            <h3 style="color: #52c41a; margin-top: 0; font-size: 18px;">👥 Статистика по возрасту клиентов</h3>
+            <p><strong>Средний возраст наших клиентов:</strong> {{ age_avg }} лет</p>
+            <p><strong>Медиана по возрасту клиентов:</strong> {{ age_median }} лет</p>
+            <hr style="border: 0; border-top: 1px dashed #ddd; margin: 10px 0;">
+            <p><strong>Самый популярный тип товаров:</strong> {{ popular_type }}</p>
+            <p><strong>Наиболее прибыльный тип:</strong> {{ profitable_type }}</p>
+        </div>
+
+    </div>
+
+    <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 40px;">
+        <h3 style="color: #333; margin-top: 0; font-size: 18px;">📋 Список товаров и услуг (в алфавитном порядке)</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+            <thead>
+                <tr style="background-color: #f5f5f5; text-align: left;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">Название пиццы / услуги</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Категория</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Цена</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items_alphabetical %}
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>{{ item.title }}</strong></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ item.category.title|default:"Пицца" }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; color: #ff4500; font-weight: bold;">{{ item.price }} BYN</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 10px; text-align: center; color: #777;">В базе данных пока нет товаров.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #ddd; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #333; font-size: 18px;">📊 Столбчатая диаграмма цен ассортимента</h3>
+        <canvas id="pricesChart" style="max-height: 350px; width: 100%;"></canvas>
     </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    // Настройка первого графика (Круговая диаграмма)
+    // 1. График контента
     const ctxContent = document.getElementById('contentChart').getContext('2d');
     new Chart(ctxContent, {
         type: 'pie',
@@ -70,9 +126,8 @@
         }
     });
 
-    // Настройка второго графика (Полукруг для рейтинга)
+    // 2. Полукруглый график рейтинга
     const ctxRating = document.getElementById('ratingChart').getContext('2d');
-    // Переводим рейтинг в числовую форму для JS, если отзывов еще нет — ставим 0
     const ratingValue = parseFloat("{{ avg_rating }}") || 0; 
     
     new Chart(ctxRating, {
@@ -86,11 +141,51 @@
         },
         options: {
             responsive: true,
-            cutout: '80%', // Делает кольцо тоньше
-            rotation: -90,  // Разворачивает, чтобы получился полукруг
+            cutout: '80%',
+            rotation: -90,
             circumference: 180,
             plugins: {
                 tooltip: { enabled: false },
+                legend: { display: false }
+            }
+        }
+    });
+
+    // 3. НОВЫЙ ГРАФИК: Наглядные цены товаров из твоего меню
+    const ctxPrices = document.getElementById('pricesChart').getContext('2d');
+    
+    // Django динамически собирает названия и цены в массивы JavaScript
+    const itemLabels = [];
+    const itemPrices = [];
+    
+    {% for item in items_alphabetical %}
+        itemLabels.push("{{ item.title }}");
+        itemPrices.push(parseFloat("{{ item.price }}") || 0);
+    {% endfor %}
+
+    new Chart(ctxPrices, {
+        type: 'bar',
+        data: {
+            labels: itemLabels,
+            datasets: [{
+                label: 'Стоимость (BYN)',
+                data: itemPrices,
+                backgroundColor: 'rgba(24, 144, 255, 0.6)',
+                borderColor: '#1890ff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return value + ' BYN'; }
+                    }
+                }
+            },
+            plugins: {
                 legend: { display: false }
             }
         }

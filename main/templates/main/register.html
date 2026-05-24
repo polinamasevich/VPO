@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 50px; margin-bottom: 50px;">
+    <div class="card shadow">
+        <div class="card-header text-white text-center" style="background-color: #ff4500;">
+            <h3 class="mb-0">Регистрация (18+)</h3>
+        </div>
+        <div class="card-body" style="background-color: #f8f9fa;">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <strong>{{ field.label }}:</strong> {{ error }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: bold; color: #333;">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn text-white font-weight-bold" style="background-color: #ff4500; font-size: 16px; padding: 10px;">
+                        Зарегистрироваться
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,17 +5,37 @@
     <title>PizzaTime</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
-        .nav-container { background: #fff; padding: 15px; border: 2px solid #ff4500; border-radius: 8px; margin-bottom: 20px; }
+        
+        /* Контейнер для всей верхней панели — делаем серую аккуратную рамку вместо оранжевой */
+        .header-container { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 20px; }
+        
+        /* ВЕРХНЯЯ СТРОЧКА: Вход и регистрация (без ярких цветов) */
+        .auth-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-bottom: 10px; 
+            margin-bottom: 10px; 
+            border-bottom: 1px dashed #ddd;
+            font-size: 14px;
+        }
+        /* Все ссылки сверху теперь одного цвета, без выделений */
+        .auth-bar a { color: #333; text-decoration: none; font-weight: bold; }
+        .auth-bar a:hover { color: #ff4500; text-decoration: underline; }
+
+        /* НИЖНЯЯ СТРОЧКА: Основное меню */
+        .nav-links { padding-top: 5px; }
         .nav-links a { color: #ff4500; text-decoration: none; font-weight: bold; margin: 0 5px; }
         .nav-links a:hover { text-decoration: underline; }
+        
         .content-block { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd; min-height: 200px; }
         
-        /* Стили для нижней панели */
+        /* Стили для нижней панели аналитики */
         .admin-footer { margin-top: 40px; padding: 20px; border-top: 2px solid #333; background: #eee; border-radius: 8px; }
         .admin-footer a { color: #333; margin-right: 15px; text-decoration: none; font-weight: bold; }
         .admin-footer a:hover { color: #ff4500; }
 
-        /* Стиль для кнопки выхода, чтобы она выглядела как ссылка */
+        /* Стиль для кнопки выхода */
         .logout-btn {
             background: none;
             border: none;
@@ -25,24 +45,44 @@
             font-size: inherit;
             cursor: pointer;
             padding: 0;
-            margin: 0;
+            margin: 0 0 0 5px;
         }
-        .logout-btn:hover {
-            color: #ff4500;
-        }
+        .logout-btn:hover { text-decoration: underline; color: #ff4500; }
     </style>
 </head>
 <body>
 
-<div class="nav-container">
-    <h2 style="margin-top: 0;">🍕 Пиццерия "PizzaTime"</h2>
+<div class="header-container">
+    <div class="auth-bar">
+        <div>
+            <h2 style="margin: 0; display: inline-block; vertical-align: middle;">🍕 Пиццерия "PizzaTime"</h2>
+        </div>
+        <div class="auth-links">
+            {% if user.is_authenticated %}
+                <span style="color: #555;">Пользователь: <strong>{{ user.username }}</strong></span>
+                
+                {% if user.is_staff %}
+                    | <a href="{% url 'stats' %}">📊 Аналитика</a> 
+                    | <a href="/admin/">⚙️ Системная админка</a>
+                {% endif %}
+                
+                | <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">🚪 Выйти</button>
+                </form>
+            {% else %}
+                <a href="/admin/">Вход</a> | 
+                <a href="{% url 'register' %}">Регистрация (18+)</a>
+            {% endif %}
+        </div>
+    </div>
     
     <nav class="nav-links">
         <a href="{% url 'index' %}">Главная</a> |
         <a href="{% url 'item_list' %}">Меню</a> |
         <a href="{% url 'reviews' %}">Отзывы гостей</a> |
         <a href="{% url 'about' %}">О компании</a> |
-        <a href="{% url 'news_list' %}">Новости</a>
+        <a href="{% url 'news_list' %}">Новости</a> |
         <a href="{% url 'contacts' %}">Контакты</a> |
         <a href="{% url 'promocodes' %}">Промокоды и Купоны</a> |
         <a href="{% url 'vacancies' %}">Вакансии</a> |
@@ -58,19 +98,7 @@
 </div>
 
 <footer class="admin-footer">
-    <p><strong>Панель управления:</strong></p>
-    {% if user.is_authenticated %}
-        <span>Пользователь: {{ user.username }}</span> |
-        <a href="{% url 'stats' %}">📊 Аналитика</a> |
-        <a href="#">👤 Пользователи</a> |
-        <a href="/admin/">⚙️ Админка</a> |
-        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" class="logout-btn">🚪 Выйти</button>
-        </form>
-    {% else %}
-        <a href="/admin/">🔒 Вход в Админку</a>
-    {% endif %}
+    <p>Панель управления сайтом "PizzaTime" © 2026</p>
 </footer>
 
 </body>

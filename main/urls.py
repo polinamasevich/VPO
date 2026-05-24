@@ -16,6 +16,9 @@ urlpatterns = [
     path('privacy/', views.privacy, name='privacy'),
     path('dictionary/', views.dictionary, name='dictionary'),
     
+    # --- СТРОКА ДЛЯ РЕГИСТРАЦИИ (18+) ---
+    path('register/', views.register, name='register'),
+    
     # Пути для панели управления внизу страницы
     path('stats/', views.stats, name='stats'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'), # ВОТ ЭТО ИСПРАВИТ ОШИБКУ LOGOUT!

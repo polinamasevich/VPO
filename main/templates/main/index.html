@@ -3,6 +3,24 @@
 {% block content %}
 <h2>Добро пожаловать!</h2>
 
+<div class="news-block" style="margin-top: 20px; margin-bottom: 30px;">
+    <h3 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 5px;">🔥 Последняя акция кухни:</h3>
+    {% if last_news %}
+        <div style="border-left: 4px solid #ff4500; padding: 15px; background: #fffaf5; border-radius: 4px; margin-top: 15px;">
+            <h4>{{ last_news.title }}</h4>
+            <p>{{ last_news.content }}</p>
+            {% if last_news.image %}
+                <img src="{{ last_news.image.url }}" style="max-width: 350px; height: auto; border-radius: 6px; margin-top: 10px;">
+            {% endif %}
+        </div>
+    {% else %}
+        <p style="color: #666; margin-top: 15px;">Акционных предложений пока нет. Их можно добавить в админке в таблицу <b>News</b>.</p>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+<hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
 <div style="display: flex; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
     
     <div style="background: #f1f3f5; padding: 15px; border-radius: 8px; width: 320px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
@@ -31,21 +49,6 @@
     </div>
 
 </div>
-
-<hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-
-<h3>🔥 Последняя акция кухни:</h3>
-{% if last_news %}
-    <div style="border-left: 4px solid #ff4500; padding: 15px; background: #fffaf5; border-radius: 4px;">
-        <h4>{{ last_news.title }}</h4>
-        <p>{{ last_news.content }}</p>
-        {% if last_news.image %}
-            <img src="{{ last_news.image.url }}" style="max-width: 350px; height: auto; border-radius: 6px;">
-        {% endif %}
-    </div>
-{% else %}
-    <p style="color: #666;">Акционных предложений пока нет. Их можно добавить в админке в таблицу <b>News</b>.</p>
-{% endif %}
 
 <script type="text/javascript">
     // --- КОД ДЛЯ ЖИВЫХ ЧАСОВ ---
@@ -144,4 +147,6 @@
 
     renderCalendar(currentMonth, currentYear);
 </script>
+{% endif %}
+
 {% endblock %}
