@@ -1,18 +1,85 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>✍️ Оставить отзыв</h2>
+<div class="container" style="padding: 20px; max-width: 800px; margin: auto;">
 
-<form method="POST">
-    {% csrf_token %}  {{ form.as_p }}
-    <button type="submit">Отправить</button>
-</form>
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 40px;">
+        <h2 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 12px; margin-bottom: 25px; font-family: sans-serif;">
+            ✍️ Оставить отзыв
+        </h2>
 
-<hr>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #444; font-size: 14px;">
+                        {{ field.label }}
+                    </label>
+                    <div class="form-field-wrapper">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <div style="color: #f5222d; font-size: 13px; margin-top: 5px;">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" style="padding: 12px 28px; background: #ff4500; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
+                Отправить
+            </button>
+        </form>
+    </div>
 
-<h2>💬 Отзывы наших гостей</h2>
-{% for rev in reviews %}
-    <p><b>{{ rev.user_name }} (Оценка: {{ rev.rating }}/5):</b><br>
-    {{ rev.text }}</p>
-{% endfor %}
+    <hr style="border: 0; border-top: 2px dashed #ddd; margin: 40px 0;">
+
+    <h3 style="color: #333; margin-bottom: 20px;">💬 Отзывы наших клиентов</h3>
+    
+    <div class="reviews-list">
+        {% for review in reviews %}
+            <div class="review-card" style="border: 1px solid #eee; padding: 20px; margin-bottom: 20px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.02); text-align: left;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="font-size: 16px; color: #262626;">🧔 {{ review.name|default:"Клиент" }}</strong>
+                    <span style="background: #fff7e6; color: #fa8c16; padding: 4px 10px; border-radius: 20px; font-weight: bold; border: 1px solid #ffd591; font-size: 13px;">
+                        ⭐ {{ review.rating }} / 5
+                    </span>
+                </div>
+
+                <p style="color: #555; line-height: 1.6; margin: 0; font-size: 15px;">
+                    {{ review.text }}
+                </p>
+
+                <hr style="border: 0; border-top: 1px solid #f0f0f0; margin: 15px 0 10px 0;">
+
+                <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                    <a href="{% url 'edit_review' review.id %}" style="color: #1890ff; text-decoration: none; font-size: 14px; font-weight: bold;">
+                        ✏️ Редактировать
+                    </a>
+                    
+                    <a href="{% url 'delete_review' review.id %}" 
+                       onclick="return confirm('Вы точно хотите удалить этот отзыв?');" 
+                       style="color: #f5222d; text-decoration: none; font-size: 14px; font-weight: bold;">
+                        🗑️ Удалить
+                    </a>
+                </div>
+
+            </div>
+        {% empty %}
+            <p style="color: #999; text-align: center; padding: 20px; background: #fafafa; border-radius: 8px;">
+                Отзывов пока нет.
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .form-field-wrapper input, .form-field-wrapper textarea, .form-field-wrapper select {
+        width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; box-sizing: border-box;
+    }
+    .form-field-wrapper input:focus, .form-field-wrapper textarea:focus, .form-field-wrapper select:focus {
+        border-color: #ff4500; outline: none; box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.1);
+    }
+    .form-field-wrapper textarea { resize: vertical; min-height: 100px; }
+</style>
 {% endblock %}

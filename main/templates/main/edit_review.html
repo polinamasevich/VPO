@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 30px; max-width: 600px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #eee;">
+    <h2 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 12px; margin-bottom: 25px; font-family: sans-serif;">
+        ✏️ Редактирование отзыва
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div style="margin-bottom: 20px; text-align: left;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #444; font-size: 14px;">
+                    {{ field.label }}
+                </label>
+                <div class="form-field-wrapper">
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                    <div style="color: #f5222d; font-size: 13px; margin-top: 5px;">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 12px; margin-top: 30px;">
+            <button type="submit" style="padding: 12px 24px; background: #52c41a; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
+                Сохранить изменения
+            </button>
+            <a href="{% url 'reviews' %}" style="padding: 12px 24px; background: #f5f5f5; color: #333; border: 1px solid #d9d9d9; border-radius: 6px; text-decoration: none; text-align: center; font-size: 14px;">
+                Отмена
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-field-wrapper input, .form-field-wrapper textarea, .form-field-wrapper select {
+        width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; box-sizing: border-box;
+    }
+    .form-field-wrapper input:focus, .form-field-wrapper textarea:focus, .form-field-wrapper select:focus {
+        border-color: #ff4500; outline: none; box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.1);
+    }
+    .form-field-wrapper textarea { resize: vertical; min-height: 120px; }
+</style>
+{% endblock %}

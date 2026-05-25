@@ -5,16 +5,16 @@ from .models import Review
 from datetime import date
 from django.core.exceptions import ValidationError
 
-# =======================================================
-# 1. ФОРМА ОТЗЫВОВ (БЕЗ ОГРАНИЧЕНИЯ 18+)
-# =======================================================
+
+# ========================== ФОРМА ОТЗЫВОВ =============================
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['user_name', 'birth_date', 'rating', 'text']
+        # УБРАЛИ 'birth_date' из списка полей
+        fields = ['user_name', 'rating', 'text']
         widgets = {
             'user_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'birth_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            # Виджет для birth_date тоже удален
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
@@ -26,9 +26,7 @@ class ReviewForm(forms.ModelForm):
         return text
 
 
-# =======================================================
-# 2. ФОРМА РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ (СТРОГО 18+ И ТЕЛЕФОН ПО РЕГУЛЯРКЕ)
-# =======================================================
+# ======================== ФОРМА РЕГИСТРАЦИИ ===========================
 class ExtendedRegistrationForm(forms.ModelForm):
     # Новое кастомное поле вместо почты
     phone_number = forms.CharField(
@@ -49,7 +47,7 @@ class ExtendedRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        # Убрали 'email', добавили 'phone_number'
+        # Тут 'birth_date' ОСТАЕТСЯ для проверки 18+ при регистрации аккаунта
         fields = ['username', 'phone_number', 'birth_date', 'password']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
@@ -58,8 +56,7 @@ class ExtendedRegistrationForm(forms.ModelForm):
     # ВАЛИДАЦИЯ НОМЕРА ТЕЛЕФОНА ЧЕРЕЗ РЕГУЛЯРНОЕ ВЫРАЖЕНИЕ
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
-        
-        # Регулярка проверяет строго формат: +375 (XX) XXX-XX-XX
+    
         phone_regex = r'^\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}$'
         
         if not phone or not re.match(phone_regex, phone):
@@ -67,7 +64,7 @@ class ExtendedRegistrationForm(forms.ModelForm):
             
         return phone
 
-    # ТВОЯ ВАЛИДАЦИЯ НА 18 ЛЕТ (ОСТАЛАСЬ БЕЗ ИЗМЕНЕНИЙ)
+    # ВАЛИДАЦИЯ НА 18 ЛЕТ ДЛЯ РЕГИСТРАЦИИ Пользователя
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get('birth_date')
         if birth_date:
@@ -82,7 +79,4 @@ class ExtendedRegistrationForm(forms.ModelForm):
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
-            # Дополнительно: если у тебя в базе есть отдельный профиль пользователя, 
-            # где хранится телефон, его можно сохранить здесь. Например:
-            # Profile.objects.create(user=user, phone=self.cleaned_data['phone_number'], birth_date=self.cleaned_data['birth_date'])
         return user
