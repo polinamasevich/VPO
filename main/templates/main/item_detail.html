@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ item.title }} — PizzaTime{% endblock %}
+{% block content %}
+<article>
+  <p><a href="{% url 'item_list' %}">← Вернуться в меню</a></p>
+  <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:start;">
+    {% if item.image %}<figure style="margin:0;max-width:460px;"><img src="{{ item.image.url }}" alt="{{ item.title }}" style="width:100%;border-radius:8px;"><figcaption>{{ item.title }}</figcaption></figure>{% endif %}
+    <section style="max-width:520px;">
+      <h1>{{ item.title }}</h1>
+      {% if item.category %}<p>Категория: <strong>{{ item.category.name }}</strong></p>{% endif %}
+      <p>{{ item.description }}</p>
+      <p style="font-size:24px;color:#ff4500;"><strong>{{ item.price }} BYN</strong></p>
+      <form method="post" action="{% url 'add_to_cart' item.id %}">{% csrf_token %}<button type="submit">🛒 Добавить в корзину</button></form>
+    </section>
+  </div>
+</article>
+{% endblock %}

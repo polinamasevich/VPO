@@ -1,0 +1,1 @@
+Wrote HTML report to lab2/reports/html/index.html

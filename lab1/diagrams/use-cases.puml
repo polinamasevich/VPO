@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+actor "Посетитель" as Guest
+actor "Клиент" as Client
+actor "Сотрудник" as Staff
+Guest <|-- Client
+rectangle PizzaTime {
+usecase "UC-01 Меню и карточка" as U1
+usecase "UC-02 Новости и сведения" as U2
+usecase "UC-03 Регистрация и вход" as U3
+usecase "UC-04 Корзина" as U4
+usecase "UC-05 Оформление и промокод" as U5
+usecase "UC-06 Свой отзыв" as U6
+usecase "UC-07 Управление и статистика" as U7
+}
+Guest -- U1
+Guest -- U2
+Guest -- U3
+Guest -- U4
+Guest -- U5
+Client -- U6
+Staff -- U6
+Staff -- U7
+@enduml

@@ -3,12 +3,12 @@
 {% block content %}
 <div class="container" style="padding: 20px; max-width: 800px; margin: auto;">
 
-    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 40px;">
+    {% if user.is_authenticated %}<div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 40px;">
         <h2 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 12px; margin-bottom: 25px; font-family: sans-serif;">
             ✍️ Оставить отзыв
         </h2>
 
-        <form method="post">
+        <form method="post" class="review-form">
             {% csrf_token %}
             {% for field in form %}
                 <div style="margin-bottom: 20px; text-align: left;">
@@ -29,7 +29,7 @@
                 Отправить
             </button>
         </form>
-    </div>
+    </div>{% else %}<p>Чтобы оставить отзыв, <a href="{% url 'register' %}">зарегистрируйтесь</a> или войдите через админ-панель.</p>{% endif %}
 
     <hr style="border: 0; border-top: 2px dashed #ddd; margin: 40px 0;">
 
@@ -40,7 +40,7 @@
             <div class="review-card" style="border: 1px solid #eee; padding: 20px; margin-bottom: 20px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.02); text-align: left;">
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <strong style="font-size: 16px; color: #262626;">🧔 {{ review.name|default:"Клиент" }}</strong>
+                    <strong style="font-size: 16px; color: #262626;">🧔 {{ review.user.username|default:review.user_name|default:"Клиент" }}</strong>
                     <span style="background: #fff7e6; color: #fa8c16; padding: 4px 10px; border-radius: 20px; font-weight: bold; border: 1px solid #ffd591; font-size: 13px;">
                         ⭐ {{ review.rating }} / 5
                     </span>
@@ -52,7 +52,7 @@
 
                 <hr style="border: 0; border-top: 1px solid #f0f0f0; margin: 15px 0 10px 0;">
 
-                <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                <small>Опубликовано: <time datetime="{{ review.date_created|date:'c' }}">{{ review.date_created|date:"d.m.Y H:i" }}</time></small>{% if user.is_staff or review.user == user %}<div style="display: flex; justify-content: flex-end; gap: 15px;">
                     <a href="{% url 'edit_review' review.id %}" style="color: #1890ff; text-decoration: none; font-size: 14px; font-weight: bold;">
                         ✏️ Редактировать
                     </a>
@@ -62,7 +62,7 @@
                        style="color: #f5222d; text-decoration: none; font-size: 14px; font-weight: bold;">
                         🗑️ Удалить
                     </a>
-                </div>
+                </div>{% endif %}
 
             </div>
         {% empty %}

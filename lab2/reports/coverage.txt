@@ -1,0 +1,12 @@
+Name                                  Stmts   Miss   Cover   Missing
+--------------------------------------------------------------------
+lab2/integrations/__init__.py             0      0 100.00%
+lab2/integrations/partner_status.py      11      0 100.00%
+main/__init__.py                          0      0 100.00%
+main/admin.py                            19      0 100.00%
+main/context_processors.py               18      0 100.00%
+main/forms.py                            59      0 100.00%
+main/models.py                          108      0 100.00%
+main/views.py                           206      2  99.03%   316-320
+--------------------------------------------------------------------
+TOTAL                                   421      2  99.52%

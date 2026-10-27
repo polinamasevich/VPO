@@ -2,10 +2,19 @@
 
 {% block content %}
 <div style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 20px;">
-    
-    {% if company_info and company_info.image %}
+
+    {% if company_info %}
         <div style="position: relative; overflow: hidden; border-radius: 6px; margin-bottom: 25px;">
-            <img src="{{ company_info.image.url }}" alt="{{ company_info.name }}" style="width: 100%; height: 400px; object-fit: cover;">
+
+            <picture>
+                <source media="(max-width: 600px)" srcset="/media/company/company-small.jpg">
+                <source media="(max-width: 1000px)" srcset="/media/company/company-medium.jpg">
+                <img src="/media/company/company-large.jpg"
+                     alt="{{ company_info.name }}"
+                     width="1024" height="559"
+                     style="display: block; width: 100%; height: auto;">
+            </picture>
+
             <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%); padding: 20px;">
                 <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                     🍕 О нашей пиццерии PizzaTime
@@ -20,7 +29,7 @@
     {% endif %}
 
     <div style="font-size: 16px; line-height: 1.8; color: #333; margin-top: 15px;">
-        <p>Добро пожаловать в нашу уютную пиццерию! Мы открылись, чтобы радовать вас самой сочной, горячей и ароматной пиццей в Минске. Наша команда ежедневно трудится над тем, чтобы каждый кусочек приносил вам истинное удовольствие.</p>
+        <p>{{ company_info.description|default:"Добро пожаловать в нашу уютную пиццерию! Мы открылись, чтобы радовать вас самой сочной, горячей и ароматной пиццей в Минске." }}</p>
         
         <h3 style="color: #ff4500; margin-top: 25px; margin-bottom: 10px;">Наши главные секреты:</h3>
         <ul style="padding-left: 20px; line-height: 2;">
@@ -32,28 +41,127 @@
 
     <hr style="border: 0; border-top: 1px solid #eee; margin: 35px 0;">
 
-    <h3 style="color: #333; margin-bottom: 25px; font-size: 22px; font-weight: bold;">📅 Наша История по Годам</h3>
-    <div style="display: flex; flex-direction: column; gap: 15px;">
-        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
-            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2019</div>
-            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Основание.</b> Мы начинали как крошечный семейный стартап. Наша первая команда состояла всего из 4 человек.</p>
-        </div>
-        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
-            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2020</div>
-            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Первая Печь.</b> Мы установили нашу легендарную дровяную печь. Наш шеф-пиццайоло представил соус "Карбонара", который стал сенсацией.</p>
-        </div>
-        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
-            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2021</div>
-            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Служба Доставки.</b> Несмотря на сложности, мы запустили свою первую круглосуточную службу доставки, которая завоевала любовь.</p>
-        </div>
-        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
-            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2022</div>
-            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Новое Меню.</b> Добавлены вегетарианские позиции и фирменная пицца. Наша команда выросла до 15 человек.</p>
-        </div>
-        <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 5px solid #ff4500;">
-            <div style="font-size: 20px; font-weight: bold; color: #ff4500; min-width: 55px; text-align: right; padding-top: 2px;">2023</div>
-            <p style="margin: 0; color: #555; line-height: 1.5;"><b>Современность.</b> Полное обновление интерьера ресторана и запуск этого сайта. Наша большая команда — это 30 профессионалов.</p>
-        </div>
+    <h3 style="color: #333; margin-bottom: 25px; font-size: 22px; font-weight: bold;">
+        📅 Наша История по Годам
+    </h3>
+
+    <div class="history-list">
+        {% for item in history %}
+            <div class="history-entry">
+
+                <div class="history-year">
+                    {{ item.year }}
+                </div>
+
+                <p>
+                    <b>{{ item.title }}.</b> {{ item.description }}
+                </p>
+
+            </div>
+
+        {% empty %}
+            <p>История компании пока не добавлена.</p>
+        {% endfor %}
     </div>
+
+    <section>
+        <h2>Наш повар делится рецептом домашней пиццы</h2>
+
+        {% if company_info.video_url %}
+            <iframe
+                width="560"
+                height="315"
+                src="{{ company_info.video_url }}"
+                title="Видео о приготовлении пиццы"
+                allowfullscreen>
+            </iframe>
+
+            <p>
+                <a href="https://www.youtube.com/watch?v=7dVMcx3gNfA" target="_blank" rel="noopener">
+                    Открыть видео на YouTube
+                </a>
+            </p>
+        {% else %}
+            <p>Ссылка на видео добавляется в карточке компании в админ-панели.</p>
+        {% endif %}
+
+        <h3>Как жарится Ваша пицца</h3>
+
+        <video controls width="560" preload="metadata">
+            <source src="/media/pizza.mp4" type="video/mp4">
+            Ваш браузер не поддерживает воспроизведение видео.
+        </video>
+    </section>
+
+    <section>
+        <h2>Реквизиты</h2>
+        <p style="white-space:pre-line;">
+            {{ company_info.requisites|default:"ООО «PizzaTime»\nУНП 123456789\nг. Минск, ул. Гикало, 9" }}
+        </p>
+    </section>
+
+    <section>
+        <h2>Сертификат</h2>
+        <div class="certificate-card">
+            <p class="certificate-brand">PIZZATIME</p>
+
+            <h3 class="certificate-title">
+                СЕРТИФИКАТ КАЧЕСТВА
+            </h3>
+
+            <p style="white-space:pre-line;">
+                {{ company_info.certificate_text|default:"Настоящим подтверждается, что PizzaTime соблюдает внутренние стандарты качества приготовления и доставки продукции.\n\nСрок действия: 2026 год." }}
+            </p>
+
+            <p>
+                <time datetime="2026-01-01">Выдан: 01.01.2026</time>
+            </p>
+        </div>
+
+        <p>
+            <a href="data:text/plain;charset=utf-8,Сертификат%20PizzaTime" download="certificate-pizzatime.txt">
+                Скачать текст сертификата
+            </a>
+        </p>
+    </section>
+
+    <aside>
+        <h2>Заметка о кухне</h2>
+
+        <p>
+            <abbr title="Hazard Analysis and Critical Control Points">ПиццаКонтроль</abbr>
+            помогает нам контролировать качество.
+        </p>
+
+        <blockquote cite="https://www.pizzatime.example">
+            <p>Хорошая пицца начинается с хороших ингредиентов.</p>
+        </blockquote>
+
+        <p>
+            <dfn>Пиццайоло</dfn> — мастер, который готовит пиццу.
+        </p>
+
+        <pre>Тесто поднимается,
+Соус тихо варится,
+Сыр золотится,
+Пицца нам нравится.</pre>
+
+        <p>
+            PizzaTime — горячая пицца<br>
+            прямо к вашей двери.
+        </p>
+    </aside>
+
+    <section>
+        <h2>Аудиоприветствие</h2>
+        <p>Короткая аудиозаставка PizzaTime.</p>
+
+        <audio controls preload="none">
+            <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+    </section>
+
 </div>
 {% endblock %}
+```

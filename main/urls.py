@@ -4,8 +4,15 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('login/', views.user_login, name='login'),
     path('news/', views.news_list, name='news_list'),
+    path('news/<int:news_id>/', views.news_detail, name='news_detail'),
     path('items/', views.item_list, name='item_list'),
+    path('items/<int:item_id>/', views.item_detail, name='item_detail'),
+    path('cart/', views.cart, name='cart'),
+    path('cart/add/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/update/<int:item_id>/', views.update_cart, name='update_cart'),
+    path('checkout/', views.checkout, name='checkout'),
     
     # Пути для работы с отзывами (Просмотр, Редактирование, Удаление)
     path('reviews/', views.reviews, name='reviews'),

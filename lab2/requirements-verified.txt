@@ -1,0 +1,8 @@
+# Runtime used for the recorded run: Python 3.9.6
+Django==4.2.30
+matplotlib==3.9.4
+numpy==2.0.2
+Pillow==11.3.0
+dj-database-url==3.0.1
+whitenoise==6.11.0
+-r requirements-test.txt

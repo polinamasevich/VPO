@@ -1,0 +1,138 @@
+from decimal import Decimal
+
+from django.contrib.auth.models import User
+from django.test import TestCase, override_settings
+from django.urls import reverse
+
+from main.models import Category, CompanyInfo, CompanyHistory, Contact, Dictionary, News, Partner, PromoCode, Review, ServiceItem, Vacancy
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class StorefrontIntegrationTests(TestCase):
+    """Проверки HTTP-представлений и их фактического взаимодействия с БД/сессией."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = Category.objects.create(name='Пицца')
+        cls.other_category = Category.objects.create(name='Напитки')
+        cls.item = ServiceItem.objects.create(title='Маргарита', price=Decimal('18.50'), description='Классическая пицца', category=cls.category)
+        cls.item2 = ServiceItem.objects.create(title='Вода', price=Decimal('2.00'), description='Вода', category=cls.other_category)
+
+    def checkout_data(self, **overrides):
+        data = {
+            'full_name': 'Гость', 'phone': '+375291234567', 'email': 'guest@example.com',
+            'fulfillment_method': 'pickup', 'address': '', 'payment_method': 'card',
+            'promo_code': '', 'comment': '', 'agree': 'on',
+        }
+        data.update(overrides)
+        return data
+
+    def test_menu_category_filter_and_sort(self):
+        response = self.client.get(reverse('item_list'), {'category': self.other_category.id, 'sort': 'price_desc'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['items']), [self.item2])
+        response = self.client.get(reverse('item_list'), {'sort': 'price_asc'})
+        self.assertEqual(list(response.context['items']), [self.item2, self.item])
+
+    def test_missing_item_returns_404(self):
+        self.assertEqual(self.client.get(reverse('item_detail', args=[99999])).status_code, 404)
+
+    def test_cart_add_update_and_remove_sequence(self):
+        self.client.post(reverse('add_to_cart', args=[self.item.id]))
+        self.client.post(reverse('update_cart', args=[self.item.id]), {'action': 'increase'})
+        self.assertEqual(self.client.session['cart'][str(self.item.id)], 2)
+        self.client.post(reverse('update_cart', args=[self.item.id]), {'action': 'decrease'})
+        self.assertEqual(self.client.session['cart'][str(self.item.id)], 1)
+        self.client.post(reverse('update_cart', args=[self.item.id]), {'action': 'remove'})
+        self.assertNotIn(str(self.item.id), self.client.session['cart'])
+
+    def test_get_add_to_cart_does_not_mutate_session(self):
+        self.client.get(reverse('add_to_cart', args=[self.item.id]))
+        self.assertNotIn(str(self.item.id), self.client.session.get('cart', {}))
+
+    def test_empty_checkout_redirects_to_cart(self):
+        response = self.client.get(reverse('checkout'))
+        self.assertRedirects(response, reverse('cart'))
+
+    def test_checkout_applies_active_case_insensitive_promo_and_clears_cart(self):
+        PromoCode.objects.create(code='PIZZA10', discount=10, is_active=True)
+        self.client.post(reverse('add_to_cart', args=[self.item.id]))
+        response = self.client.post(reverse('checkout'), self.checkout_data(promo_code='pizza10'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['discount'], Decimal('1.85'))
+        self.assertEqual(response.context['final_total'], Decimal('16.65'))
+        self.assertEqual(self.client.session['cart'], {})
+
+    def test_invalid_or_inactive_promo_keeps_checkout_and_cart(self):
+        PromoCode.objects.create(code='OLD', discount=20, is_active=False)
+        self.client.post(reverse('add_to_cart', args=[self.item.id]))
+        for code in ('UNKNOWN', 'OLD'):
+            with self.subTest(code=code):
+                response = self.client.post(reverse('checkout'), self.checkout_data(promo_code=code))
+                self.assertEqual(response.status_code, 200)
+                self.assertFormError(response.context['form'], 'promo_code', 'Промокод не найден или находится в архиве.')
+                self.assertTrue(self.client.session['cart'])
+
+    def test_delivery_without_address_is_rejected_and_cart_is_preserved(self):
+        self.client.post(reverse('add_to_cart', args=[self.item.id]))
+        response = self.client.post(reverse('checkout'), self.checkout_data(fulfillment_method='delivery'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('address', response.context['form'].errors)
+        self.assertTrue(self.client.session['cart'])
+
+    def test_register_login_and_review_lifecycle(self):
+        user = User.objects.create_user(username='reviewer', password='safe-password-123')
+        self.client.login(username='reviewer', password='safe-password-123')
+        response = self.client.post(reverse('reviews'), {'rating': 5, 'text': 'Очень вкусная пицца!'}, follow=True)
+        review = Review.objects.get(user=user)
+        self.assertContains(response, 'reviewer')
+        self.client.post(reverse('edit_review', args=[review.id]), {'rating': 4, 'text': 'Теперь еще лучше!'})
+        review.refresh_from_db()
+        self.assertEqual(review.rating, 4)
+        self.client.post(reverse('delete_review', args=[review.id]))
+        self.assertFalse(Review.objects.filter(pk=review.id).exists())
+
+    def test_another_user_cannot_edit_or_delete_review(self):
+        owner = User.objects.create_user(username='owner', password='safe-password-123')
+        stranger = User.objects.create_user(username='stranger', password='safe-password-123')
+        review = Review.objects.create(user=owner, user_name='owner', rating=5, text='Хорошая пицца')
+        self.client.login(username='stranger', password='safe-password-123')
+        response = self.client.post(reverse('edit_review', args=[review.id]), {'rating': 1, 'text': 'Плохая пицца'})
+        self.assertRedirects(response, reverse('reviews'))
+        self.client.post(reverse('delete_review', args=[review.id]))
+        review.refresh_from_db()
+        self.assertEqual(review.rating, 5)
+
+    def test_anonymous_user_can_read_reviews(self):
+        self.assertEqual(self.client.get(reverse('reviews')).status_code, 200)
+
+    def test_staff_can_view_stats_and_regular_user_is_redirected(self):
+        self.assertRedirects(self.client.get(reverse('stats')), reverse('index'))
+        ServiceItem.objects.update(category=None)
+        staff = User.objects.create_user(username='staff', password='safe-password-123', is_staff=True)
+        self.client.force_login(staff)
+        response = self.client.get(reverse('stats'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['chart_base64'])
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class InformationalPageIntegrationTests(TestCase):
+    def test_company_news_contacts_reference_pages_render(self):
+        CompanyInfo.objects.create(name='PizzaTime', description='Пиццерия')
+        CompanyHistory.objects.create(year=2020, title='Открытие', description='Начало работы')
+        Contact.objects.create(name='Иван', position='Менеджер', phone='+375291234567', email='ivan@example.com')
+        News.objects.create(title='Новость', text='Текст новости', short_text='Коротко')
+        Partner.objects.create(name='Партнёр', website='https://example.com')
+        PromoCode.objects.create(code='WELCOME', discount=5)
+        Vacancy.objects.create(title='Курьер', description='Доставка', salary='1000 BYN')
+        Dictionary.objects.create(word='Франшиза', definition='Условия')
+        for name in ('index', 'about', 'contacts', 'news_list', 'promocodes', 'vacancies', 'dictionary', 'terms', 'privacy'):
+            with self.subTest(page=name):
+                self.assertEqual(self.client.get(reverse(name)).status_code, 200)
+        news = News.objects.first()
+        self.assertEqual(self.client.get(reverse('news_detail', args=[news.id])).status_code, 200)
+
+    def test_missing_news_returns_404_and_login_page_renders(self):
+        self.assertEqual(self.client.get(reverse('news_detail', args=[98765])).status_code, 404)
+        self.assertEqual(self.client.get(reverse('login')).status_code, 200)

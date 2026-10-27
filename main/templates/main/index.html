@@ -1,152 +1,562 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
+<section class="pizza-animation" aria-label="Анимация приготовления пиццы">
+    <div class="pizza-scene">
+        <div class="pizza-base">🍕</div>
+        <span class="pizza-ingredient ingredient-cheese">🧀</span>
+        <span class="pizza-ingredient ingredient-tomato">🍅</span>
+        <span class="pizza-ingredient ingredient-olive">🫒</span>
+        <span class="pizza-ingredient ingredient-basil">🌿</span>
+        <span class="pizza-steam steam-one">〰</span>
+        <span class="pizza-steam steam-two">〰</span>
+    </div>
+    <h1 class="pizza-brand-title">PizzaTime</h1>
+    <p>Тесто, свежие ингредиенты и немного магии</p>
+</section>
+
 <h2>Добро пожаловать!</h2>
 
-<div class="news-block" style="margin-top: 20px; margin-bottom: 30px;">
-    <h3 style="color: #333; border-bottom: 2px solid #ff4500; padding-bottom: 5px;">🔥 Последняя акция кухни:</h3>
-    {% if last_news %}
-        <div style="border-left: 4px solid #ff4500; padding: 15px; background: #fffaf5; border-radius: 4px; margin-top: 15px;">
-            <h4>{{ last_news.title }}</h4>
-            <p>{{ last_news.content }}</p>
-            {% if last_news.image %}
-                <img src="{{ last_news.image.url }}" style="max-width: 350px; height: auto; border-radius: 6px; margin-top: 10px;">
+<section aria-label="Реклама PizzaTime"
+         style="margin:20px 0;padding:35px;background:linear-gradient(120deg,#ff4500,#ff9f1c);color:white;border-radius:8px;">
+
+    <h1>Горячая пицца — до вашей двери</h1>
+
+    <p>
+        Доставка по Минску каждый день с 10:00 до 22:00.
+        Оформите заказ онлайн за пару минут.
+    </p>
+
+    <a href="{% url 'item_list' %}"
+       style="background:white;color:#d93800;padding:10px 14px;border-radius:4px;text-decoration:none;font-weight:bold;">
+        Выбрать пиццу
+    </a>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+        {% for item in featured_items|slice:":3" %}
+            {% if item.image %}
+                <img src="{{ item.image.url }}"
+                     alt="{{ item.title }}"
+                     style="width:31%;height:120px;object-fit:cover;border-radius:6px;">
             {% endif %}
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Каталог</h2>
+
+    <div class="catalog-grid">
+
+        {% for item in featured_items %}
+
+            <article class="catalog-card catalog-card--featured">
+
+                {% if item.image %}
+                    <img src="{{ item.image.url }}"
+                         alt="{{ item.title }}"
+                         style="width:100%;height:120px;object-fit:cover;">
+                {% endif %}
+
+                <h3>{{ item.title }}</h3>
+
+                <p>{{ item.description|truncatechars:70 }}</p>
+
+                <a href="{% url 'item_detail' item.id %}">
+                    Подробнее
+                </a>
+
+            </article>
+
+        {% empty %}
+
+            <p>Каталог пополняется.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<div class="news-block latest-news-position" style="margin-top:20px;margin-bottom:30px;">
+
+    <h3 style="color:#333;border-bottom:2px solid #ff4500;padding-bottom:5px;">
+        🔥 Последняя акция кухни:
+    </h3>
+
+    {% if last_news %}
+
+        <div style="border-left:4px solid #ff4500;padding:15px;background:#fffaf5;border-radius:4px;margin-top:15px;">
+
+            <h4>{{ last_news.title }}</h4>
+
+            <p>{{ last_news.text|truncatechars:170 }}</p>
+
+            <a href="{% url 'news_detail' last_news.id %}">
+                Читать статью
+            </a>
+
+            {% if last_news.image %}
+
+                <img src="{{ last_news.image.url }}"
+                     style="max-width:350px;height:auto;border-radius:6px;margin-top:10px;"
+                     alt="{{ last_news.title }}">
+
+            {% endif %}
+
         </div>
+
     {% else %}
-        <p style="color: #666; margin-top: 15px;">Акционных предложений пока нет. Их можно добавить в админке в таблицу <b>News</b>.</p>
+
+        <p style="color:#666;margin-top:15px;">
+            Акционных предложений пока нет.
+            Их можно добавить в админке в таблицу <b>News</b>.
+        </p>
+
     {% endif %}
+
 </div>
+
 
 {% if user.is_authenticated %}
-<hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
 
-<div style="display: flex; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
-    
-    <div style="background: #f1f3f5; padding: 15px; border-radius: 8px; width: 320px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <button id="prev-month" style="background: #ff4500; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">&lt;</button>
-            <h3 id="month-year-title" style="margin: 0; font-size: 18px;"></h3>
-            <button id="next-month" style="background: #ff4500; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">&gt;</button>
+<hr style="border:0;border-top:1px solid #eee;margin:30px 0;">
+
+<div style="display:flex;gap:40px;flex-wrap:wrap;margin-top:20px;">
+
+    <!-- КАЛЕНДАРЬ -->
+
+    <div style="background:#f1f3f5;padding:15px;border-radius:8px;width:320px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+
+            <button id="prev-month"
+                    style="background:#ff4500;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold;">
+                &lt;
+            </button>
+
+            <h3 id="month-year-title" style="margin:0;font-size:18px;"></h3>
+
+            <button id="next-month"
+                    style="background:#ff4500;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold;">
+                &gt;
+            </button>
+
         </div>
-        
-        <table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%; background: white; border: 1px solid #ccc; text-align: center;">
+
+
+        <table border="1"
+               cellpadding="8"
+               style="border-collapse:collapse;width:100%;background:white;border:1px solid #ccc;text-align:center;">
+
             <thead>
-                <tr style="background: #ff4500; color: white; font-weight: bold;">
-                    <th style="padding: 5px;">Пн</th><th style="padding: 5px;">Вт</th><th style="padding: 5px;">Ср</th><th style="padding: 5px;">Чт</th><th style="padding: 5px;">Пт</th><th style="padding: 5px;">Сб</th><th style="padding: 5px;">Вс</th>
+
+                <tr style="background:#ff4500;color:white;font-weight:bold;">
+
+                    <th id="mon" style="padding:5px;">Пн</th>
+                    <th id="tue" style="padding:5px;">Вт</th>
+                    <th id="wed" style="padding:5px;">Ср</th>
+                    <th id="thu" style="padding:5px;">Чт</th>
+                    <th id="fri" style="padding:5px;">Пт</th>
+                    <th id="sat" style="padding:5px;">Сб</th>
+                    <th id="sun" style="padding:5px;">Вс</th>
+
                 </tr>
+
             </thead>
+
             <tbody id="calendar-body">
+
             </tbody>
+
         </table>
+
     </div>
 
-    <div style="background: #f1f3f5; padding: 15px; border-radius: 8px; width: 320px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0;">🕒 Время на сервере (Онлайн):</h3>
-        <p>Таймзона: Europe/Minsk</p>
-        <p><b>Местное время:</b> <span id="live-server-time" style="font-family: monospace; font-size: 18px; color: #d93800; font-weight: bold;">{{ server_time }}</span></p>
-        <p><b>Время по UTC:</b> <span id="live-utc-time" style="font-family: monospace; font-size: 16px; color: #555;">{{ utc_time }}</span></p>
+
+    <!-- ВРЕМЯ -->
+
+    <div style="background:#f1f3f5;padding:15px;border-radius:8px;width:320px;box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+
+        <h3 style="margin-top:0;">
+            🕒 Время на сервере (Онлайн):
+        </h3>
+
+        <p>
+            Таймзона: Europe/Minsk
+        </p>
+
+        <p>
+            <b>Местное время:</b>
+
+            <span id="live-server-time"
+                  style="font-family:monospace;font-size:18px;color:#d93800;font-weight:bold;">
+                {{ server_time }}
+            </span>
+        </p>
+
+        <p>
+            <b>Время по UTC:</b>
+
+            <span id="live-utc-time"
+                  style="font-family:monospace;font-size:16px;color:#555;">
+                {{ utc_time }}
+            </span>
+        </p>
+
     </div>
 
 </div>
 
+
 <script type="text/javascript">
-    // --- КОД ДЛЯ ЖИВЫХ ЧАСОВ ---
+
+    // ==========================================
+    // ЖИВЫЕ ЧАСЫ
+    // ==========================================
+
     function tick() {
+
         var d = new Date();
-        var minsk = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3 * 3600000));
-        var utc = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+
+        var minsk = new Date(
+            d.getTime() +
+            (d.getTimezoneOffset() * 60000) +
+            (3 * 3600000)
+        );
+
+        var utc = new Date(
+            d.getTime() +
+            (d.getTimezoneOffset() * 60000)
+        );
+
 
         function buildStr(dateObj) {
+
             var day = ('0' + dateObj.getDate()).slice(-2);
             var mon = ('0' + (dateObj.getMonth() + 1)).slice(-2);
             var yr = dateObj.getFullYear();
+
             var hr = ('0' + dateObj.getHours()).slice(-2);
             var min = ('0' + dateObj.getMinutes()).slice(-2);
             var sec = ('0' + dateObj.getSeconds()).slice(-2);
-            return day + '/' + mon + '/' + yr + ' ' + hr + ':' + min + ':' + sec;
+
+            return day + '/' + mon + '/' + yr + ' ' +
+                   hr + ':' + min + ':' + sec;
         }
+
 
         var sEl = document.getElementById('live-server-time');
         var uEl = document.getElementById('live-utc-time');
-        if (sEl) sEl.innerHTML = buildStr(minsk);
-        if (uEl) uEl.innerHTML = buildStr(utc);
+
+        if (sEl) {
+            sEl.innerHTML = buildStr(minsk);
+        }
+
+        if (uEl) {
+            uEl.innerHTML = buildStr(utc);
+        }
+
     }
+
     setInterval(tick, 1000);
 
-    // --- КОД ДЛЯ ЛИСТАЕМОГО КАЛЕНДАРЯ ---
-    var currentMonth = 4; // Май (отсчет с 0, т.е. 4 = Май)
+
+    // ==========================================
+    // ЛИСТАЕМЫЙ КАЛЕНДАРЬ
+    // ==========================================
+
+    var currentMonth = 4; // Май
     var currentYear = 2026;
 
-    var monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
+    var monthNames = [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь"
+    ];
+
+
+    // ID заголовков таблицы.
+    // Они используются атрибутом headers у ячеек.
+
+    var headers = [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+    ];
+
 
     function renderCalendar(month, year) {
+
         var firstDay = new Date(year, month, 1).getDay();
-        var startingDay = firstDay === 0 ? 6 : firstDay - 1; 
-        
-        var daysInMonth = new Date(year, month + 1, 0).getDate();
-        var calendarBody = document.getElementById("calendar-body");
-        var titleEl = document.getElementById("month-year-title");
-        
-        if (!calendarBody || !titleEl) return;
-        
+
+        var startingDay =
+            firstDay === 0
+                ? 6
+                : firstDay - 1;
+
+        var daysInMonth =
+            new Date(year, month + 1, 0).getDate();
+
+
+        var calendarBody =
+            document.getElementById("calendar-body");
+
+        var titleEl =
+            document.getElementById("month-year-title");
+
+
+        if (!calendarBody || !titleEl) {
+            return;
+        }
+
+
         calendarBody.innerHTML = "";
-        titleEl.innerHTML = monthNames[month] + " " + year;
+
+        titleEl.innerHTML =
+            monthNames[month] + " " + year;
+
 
         var today = new Date();
 
         var date = 1;
+
+
         for (var i = 0; i < 6; i++) {
-            var row = document.createElement("tr");
+
+            var row =
+                document.createElement("tr");
+
 
             for (var j = 0; j < 7; j++) {
-                var cell = document.createElement("td");
+
+                var cell =
+                    document.createElement("td");
+
+
+                // ==================================
+                // ВАЖНО:
+                // Связываем ячейку с заголовком
+                // соответствующего столбца.
+                // ==================================
+
+                cell.setAttribute(
+                    "headers",
+                    headers[j]
+                );
+
+
                 cell.style.width = "35px";
                 cell.style.height = "35px";
                 cell.style.padding = "5px";
 
+
                 if (i === 0 && j < startingDay) {
+
                     cell.innerHTML = "";
-                } else if (date > daysInMonth) {
-                    break;
-                } else {
-                    cell.innerHTML = date;
-                    
-                    if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                        cell.style.border = "3px solid #00bfff";
-                        cell.style.fontWeight = "bold";
-                        cell.style.backgroundColor = "#e6f7ff";
-                        cell.style.borderRadius = "4px";
-                    }
-                    date++;
+
                 }
+
+                else if (date > daysInMonth) {
+
+                    break;
+
+                }
+
+                else {
+
+                    cell.innerHTML = date;
+
+
+                    // Выделяем сегодняшний день
+
+                    if (
+                        date === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear()
+                    ) {
+
+                        cell.style.border =
+                            "3px solid #00bfff";
+
+                        cell.style.fontWeight =
+                            "bold";
+
+                        cell.style.backgroundColor =
+                            "#e6f7ff";
+
+                        cell.style.borderRadius =
+                            "4px";
+
+                    }
+
+
+                    date++;
+
+                }
+
+
                 row.appendChild(cell);
+
             }
+
+
             calendarBody.appendChild(row);
-            if (date > daysInMonth) break;
+
+
+            if (date > daysInMonth) {
+                break;
+            }
+
         }
+
     }
 
-    document.getElementById("prev-month").addEventListener("click", function() {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar(currentMonth, currentYear);
-    });
 
-    document.getElementById("next-month").addEventListener("click", function() {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar(currentMonth, currentYear);
-    });
+    // ==========================================
+    // ПРЕДЫДУЩИЙ МЕСЯЦ
+    // ==========================================
 
-    renderCalendar(currentMonth, currentYear);
+    document
+        .getElementById("prev-month")
+        .addEventListener("click", function() {
+
+            currentMonth--;
+
+
+            if (currentMonth < 0) {
+
+                currentMonth = 11;
+                currentYear--;
+
+            }
+
+
+            renderCalendar(
+                currentMonth,
+                currentYear
+            );
+
+        });
+
+
+    // ==========================================
+    // СЛЕДУЮЩИЙ МЕСЯЦ
+    // ==========================================
+
+    document
+        .getElementById("next-month")
+        .addEventListener("click", function() {
+
+            currentMonth++;
+
+
+            if (currentMonth > 11) {
+
+                currentMonth = 0;
+                currentYear++;
+
+            }
+
+
+            renderCalendar(
+                currentMonth,
+                currentYear
+            );
+
+        });
+
+
+    // Первоначальное отображение календаря
+
+    renderCalendar(
+        currentMonth,
+        currentYear
+    );
+
 </script>
+
 {% endif %}
+
+
+<!-- ПАРТНЕРЫ -->
+
+<section style="margin-top:30px;">
+
+    <h2>Наши партнеры</h2>
+
+    <div class="partner-grid">
+
+        {% for partner in partners %}
+
+            <a href="{{ partner.website }}"
+               target="_blank"
+               rel="noopener"
+               class="partner-link">
+
+                <figure style="margin:0;">
+
+                    {% if partner.logo %}
+
+                        <img src="{{ partner.logo.url }}"
+                             alt="Логотип {{ partner.name }}">
+
+                    {% elif partner.name == 'Пицца Темпо' %}
+
+                        <img src="{% static 'partner_logos/pizzatempo.svg' %}"
+                             alt="Логотип Пицца Темпо">
+
+                    {% elif partner.name == 'Белпочта' %}
+
+                        <img src="{% static 'partner_logos/belpost.svg' %}"
+                             alt="Логотип Белпочта">
+
+                    {% elif partner.name == 'Беларусбанк' %}
+
+                        <img src="{% static 'partner_logos/belarusbank.svg' %}"
+                             alt="Логотип Беларусбанк">
+
+                    {% endif %}
+
+                    <figcaption class="partner-name">
+                        {{ partner.name }}
+                    </figcaption>
+
+                </figure>
+
+            </a>
+
+        {% empty %}
+
+            <p>
+                Список партнеров появится после добавления
+                в админ-панели.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 
 {% endblock %}

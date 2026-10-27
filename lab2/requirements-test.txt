@@ -1,0 +1,4 @@
+# Install in the same environment as the application.
+coverage==7.10.7
+responses==0.26.3
+requests>=2.30,<3

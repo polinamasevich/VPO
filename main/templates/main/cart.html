@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<section><h1>🛒 Корзина заказа</h1>
+{% if cart_items %}
+<table style="width:100%;border-collapse:collapse;"><thead><tr><th scope="col">Товар</th><th scope="col">Цена</th><th scope="col">Количество</th><th scope="col">Сумма</th><th scope="col">Действие</th></tr></thead><tbody>
+{% for row in cart_items %}<tr><td><a href="{% url 'item_detail' row.item.id %}">{{ row.item.title }}</a></td><td>{{ row.item.price }} BYN</td><td><form class="cart-quantity-form" method="post" action="{% url 'update_cart' row.item.id %}">{% csrf_token %}<button class="cart-quantity-button" type="submit" name="action" value="decrease" aria-label="Уменьшить количество {{ row.item.title }}">−</button><output aria-live="polite">{{ row.quantity }}</output><button class="cart-quantity-button" type="submit" name="action" value="increase" aria-label="Добавить ещё {{ row.item.title }}">+</button></form></td><td>{{ row.subtotal }} BYN</td><td><form method="post" action="{% url 'update_cart' row.item.id %}">{% csrf_token %}<button name="action" value="remove">Удалить из корзины</button></form></td></tr>{% endfor %}
+</tbody><tfoot><tr><th colspan="3" scope="row">Итого</th><td colspan="2">{{ total }} BYN</td></tr></tfoot></table>
+<p><a href="{% url 'checkout' %}" style="display:inline-block;background:#ff4500;color:#fff;padding:12px 18px;border-radius:5px;text-decoration:none;">Оплатить и оформить заказ</a></p>
+<p><a class="cart-continue-shopping" href="{% url 'item_list' %}">＋ Добавить ещё товар</a></p>
+{% else %}<p>Корзина пока пуста. <a href="{% url 'item_list' %}">Перейти в меню</a>.</p>{% endif %}</section>
+{% endblock %}

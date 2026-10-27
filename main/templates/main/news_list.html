@@ -1,24 +1,19 @@
 {% extends 'base.html' %}
 
+{% block title %}Новости и акции — PizzaTime{% endblock %}
 {% block content %}
-<h2>📰 Новости и Акции</h2>
-<div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
-    {% for n in news %}
-        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 5px solid #ff4500; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="margin-top: 0;">{{ n.title }}</h3>
-            
-            {% if n.image %}
-                <div style="margin-bottom: 15px;">
-                    <img src="{{ n.image.url }}" alt="{{ n.title }}" style="max-width: 100%; max-height: 300px; border-radius: 4px; object-fit: cover;">
-                </div>
-            {% endif %}
-            
-            <p style="color: #333; line-height: 1.5;">{{ n.text }}</p>
-            
-            <small style="color: #999; display: block; margin-top: 10px;">Опубликовано: {{ n.created_at|date:"d.m.Y H:i" }}</small>
-        </div>
-    {% empty %}
-        <p>Пока новостей нет, но скоро они обязательно появятся!</p>
-    {% endfor %}
-</div>
+<section class="content-block news-page">
+    <h1>Новости и акции</h1>
+    <div class="news-grid">
+        {% for n in news %}
+        <article class="news-card">
+            <h2>{{ n.title }}</h2>
+            {% if n.image %}<img src="{{ n.image.url }}" alt="{{ n.title }}">{% endif %}
+            <p class="news-summary">{{ n.short_text }}</p>
+            <a class="news-read-more" href="{% url 'news_detail' n.id %}">Читать далее</a>
+            <small class="news-date">Опубликовано: {{ n.created_at|date:"d.m.Y H:i" }}</small>
+        </article>
+        {% empty %}<p>Пока новостей нет, но скоро они обязательно появятся!</p>{% endfor %}
+    </div>
+</section>
 {% endblock %}

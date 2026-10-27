@@ -18,14 +18,14 @@
 <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
 
 <h3 style="color: #333; margin-bottom: 20px;">👥 Наша Команда</h3>
-<div style="display: flex; gap: 25px; flex-wrap: wrap;">
+<div class="employee-list">
     {% for emp in employees %}
-        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; width: 230px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center;">
+        <div class="employee-card">
             
             {% if emp.image %}
-                <img src="{{ emp.image.url }}" alt="{{ emp.name }}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin: 0 auto 15px auto; border: 3px solid #ff4500;">
+                <img src="{{ emp.image.url }}" alt="{{ emp.name }}" class="employee-photo">
             {% else %}
-                <div style="width: 120px; height: 120px; background: #eaeaea; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 40px;">
+                <div class="employee-placeholder">
                     👤
                 </div>
             {% endif %}

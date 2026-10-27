@@ -2,10 +2,11 @@
 
 {% block content %}
 <div class="container" style="max-width: 800px; margin: auto; padding: 20px;">
-    <h2 style="text-align: center;">🔥 Наши активные промокоды</h2>
+    <h2 style="text-align: center;">🔥 Промокоды и купоны</h2>
     <p style="text-align: center;">Используйте эти коды при оформлении заказа, чтобы получить скидку:</p>
-    
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: center;">
+
+    <table class="promo-table" style="width: 100%; margin-top: 20px; text-align: center;">
+        <caption>Действующие промокоды PizzaTime</caption>
         <thead>
             <tr style="border-bottom: 2px solid #ddd; background-color: #f8f9fa;">
                 <th style="padding: 12px;">Код</th>
@@ -15,13 +16,28 @@
         </thead>
         <tbody>
             {% for p in promocodes %}
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 12px; font-weight: bold; color: #ff4500;">{{ p.code }}</td>
-                <td style="padding: 12px;">{{ p.discount }}%</td>
-                <td style="padding: 12px;">{{ p.description|default:"—" }}</td>
-            </tr>
+                {% if p.is_active %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px; font-weight: bold; color: #ff4500;">{{ p.code }}</td>
+                    <td style="padding: 12px;">{{ p.discount }}%</td>
+                    <td style="padding: 12px;">{{ p.description|default:"—" }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <tr><td colspan="3" style="padding: 15px;">Промокодов пока нет.</td></tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <h3>Архив промокодов</h3>
+    <ul>
+        {% for p in promocodes %}
+            {% if not p.is_active %}
+                <li><s>{{ p.code }}</s> — {{ p.discount }}%, {{ p.description|default:"—" }}</li>
+            {% endif %}
+        {% empty %}
+            <li>Архив пока пуст.</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

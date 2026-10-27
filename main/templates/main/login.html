@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Вход — PizzaTime{% endblock %}
+{% block content %}
+<section style="max-width:420px;margin:auto;">
+    <h1>Вход в аккаунт</h1>
+    <p>Войдите, чтобы оставить отзыв и оформить заказ.</p>
+    <form method="post">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {% for field in form %}
+            <p><label for="{{ field.id_for_label }}">{{ field.label }}</label><br>{{ field }}{% for error in field.errors %}<br><small style="color:#b00;">{{ error }}</small>{% endfor %}</p>
+        {% endfor %}
+        {% for error in form.non_field_errors %}<p style="color:#b00;">{{ error }}</p>{% endfor %}
+        <button type="submit">Войти</button>
+    </form>
+    <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь</a>.</p>
+</section>
+{% endblock %}

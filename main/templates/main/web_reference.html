@@ -1,0 +1,664 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}HTML-элементы и атрибуты — PizzaTime{% endblock %}
+
+{% block content %}
+<style>
+    .reference-page { line-height: 1.55; }
+    .reference-page section { margin-bottom: 28px; }
+    .reference-page .demo { padding: 18px; margin: 12px 0; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+    .reference-page code { background: #eee; padding: 2px 5px; border-radius: 4px; }
+    .reference-page pre { overflow-x: auto; background: #f2f2f2; padding: 12px; border-radius: 8px; }
+    .microdata-card { border: 2px solid #ff4500; padding: 16px; border-radius: 8px; }
+</style>
+
+<div class="reference-page" id="html-reference"
+     title="Демонстрационная страница HTML"
+     dir="ltr" lang="ru"
+     contenteditable="false" spellcheck="false" translate="yes"
+     data-page-type="html-reference"
+     draggable="false">
+
+    <header>
+        <h1>HTML: элементы, атрибуты и микроданные</h1>
+        <p><strong>Демонстрационная страница лабораторной работы.</strong>
+           Здесь собраны элементы и атрибуты из трёх лекций.</p>
+    </header>
+
+    <nav aria-label="Навигация по демонстрации">
+        <a href="#text">Текст</a> |
+        <a href="#links">Ссылки</a> |
+        <a href="#lists">Списки</a> |
+        <a href="#sections">Секции</a> |
+        <a href="#tables">Таблицы</a> |
+        <a href="#forms">Формы</a> |
+        <a href="#images">Изображения</a> |
+        <a href="#frames">Фреймы</a> |
+        <a href="#media">Мультимедиа</a> |
+        <a href="#microdata">Микроданные</a>
+    </nav>
+
+    <main>
+
+        <section id="text">
+            <h2>1. Текстовые элементы</h2>
+            <p>
+                <b>HTML</b> содержит <strong>семантические</strong> и
+                <i>стилистические</i> способы выделения текста.
+                <em>Это смысловой акцент.</em>
+                <u>Это подчёркивание.</u>
+                <mark>Это выделение.</mark>
+                <small>Это мелкий дополнительный текст.</small>
+                H<sub>2</sub>O и x<sup>2</sup>.
+                <s>Неактуальный текст</s>.
+            </p>
+
+            <p>
+                <abbr title="HyperText Markup Language">HTML</abbr> —
+                <dfn title="Язык гипертекстовой разметки">язык разметки</dfn>.
+                <code>print("Hello")</code>, <!--фрагмент кода мон. шрифт-->
+                <var>variable</var>, <!--перемення курсив-->
+                <samp>Hello, world!</samp>,
+                <kbd>Ctrl+C</kbd>. <!-- ввод пользователья-->
+            </p>
+
+            <p>
+                <q cite="https://example.com/source">Короткая цитата</q>.
+                Источник: <cite>Пример документа</cite>.
+                Сегодня: <time datetime="2026-09-17">17 сентября 2026</time>.
+            </p>
+
+            <p>Длинное слово с возможными переносами: супер<wbr>длинное<wbr>слово.</p>
+
+            <pre>Предварительно
+форматированный   текст
+    с пробелами.</pre>
+
+            <blockquote cite="https://example.com/quote">
+                Это блочная цитата с указанным источником.
+            </blockquote>
+
+            <hr>
+
+            <!-- Устаревший элемент font из презентации -->
+            <font size="3" color="blue" face="Arial">Элемент font из лекции</font>
+        </section>
+
+        <section id="links">
+            <h2>2. Ссылки и якоря</h2>
+
+            <p>
+                <a href="{% url 'index' %}"
+                   target="_self"
+                   title="Главная"
+                   accesskey="h"
+                   tabindex="1"
+                   hreflang="ru"
+                   type="text/html"
+                   rel="alternate">
+                    Ссылка на главную
+                </a>
+            </p>
+
+            <p>
+                <a href="#anchor-demo">Перейти к якорю</a>
+            </p>
+
+            <p>
+                <a href="mailto:test@example.com?subject=HTML">E-mail</a> |
+                <a href="tel:+375291234567">Телефон</a> |
+                <a href="{% url 'index' %}" download>Скачать документ</a>
+            </p>
+
+            <p id="anchor-demo">
+                Это цель якоря <a id="old-anchor" name="old-anchor"></a>.
+            </p>
+        </section>
+
+        <section id="lists">
+            <h2>3. Списки и группировка</h2>
+
+            <ul type="square">
+                <li>Маркированный пункт</li>
+                <li type="circle">Другой пункт</li>
+            </ul>
+
+            <ol type="A" start="3" reversed>
+                <li>Первый</li>
+                <li value="7">Пункт с value</li>
+                <li>Последний</li>
+            </ol>
+
+            <dl>
+                <dt>HTML</dt>
+                <dd>Язык гипертекстовой разметки.</dd>
+                <dt>CSS</dt>
+                <dd>Таблицы стилей.</dd>
+            </dl>
+
+            <figure> 
+                <img src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                     alt="Логотип PizzaTime"
+                     width="180" height="120">
+                <figcaption>Пример figure и figcaption</figcaption>
+            </figure>
+
+            <div class="demo">
+                <p>
+                    <span title="span">span — строчный универсальный контейнер.</span>
+                </p>
+            </div>
+
+            <details open>
+                <summary>details и summary</summary>
+                <p>Этот текст можно скрыть или показать.</p>
+            </details>
+        </section>
+
+        <section id="sections">
+            <h2>4. Семантические секции</h2>
+
+            <hgroup>
+                <h3>PizzaTime</h3>
+                <h4>Пицца и доставка</h4>
+            </hgroup>
+
+            <article>
+                <h3>Статья</h3>
+                <p>Самостоятельный законченный материал.</p>
+            </article>
+
+            <aside>
+                <p>Дополнительная информация сбоку от основного контента.</p>
+            </aside>
+
+            <address>
+                Автор страницы: PizzaTime, Минск.
+                <a href="{% url 'contacts' %}">Контакты</a>
+            </address>
+        </section>
+
+        <section id="tables">
+            <h2>5. Таблицы</h2>
+
+            <table align="center"
+                   background=""
+                   bgcolor="#ffffff"
+                   border="1"
+                   bordercolor="#333333"
+                   cellpadding="5"
+                   cellspacing="2"
+                   cols="3"
+                   frame="border"
+                   rules="all"
+                   summary="Демонстрационная таблица"
+                   width="100%">
+                <caption>Демонстрация table и его атрибутов</caption>
+
+                <colgroup align="center" valign="middle" width="33%">
+                    <col align="left" valign="top" width="33%">
+                    <col align="center" valign="middle" width="33%">
+                    <col align="right" valign="bottom" width="34%">
+                </colgroup>
+
+                <thead align="center" valign="middle">
+                    <tr align="center" bgcolor="#eeeeee" bordercolor="#333333" valign="middle">
+                        <th id="rank"
+                            abbr="№"
+                            background=""
+                            colspan="1"
+                            height="30"
+                            nowrap
+                            width="10%">№</th>
+                        <th id="name">Название</th>
+                        <th id="price">Цена</th>
+                    </tr>
+                </thead>
+
+                <tbody align="left" valign="middle">
+                    <tr>
+                        <th id="first" headers="rank">1</th>
+                        <td headers="name first" background="" height="40" nowrap width="60%">Пицца</td>
+                        <td headers="price first">20 BYN</td>
+                    </tr>
+                    <tr>
+                        <th id="second" headers="rank">2</th>
+                        <td headers="name second" colspan="2">Другой товар</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" align="center" bgcolor="#fafafa"
+                            bordercolor="#333333" valign="middle"
+                            height="40" width="20%" nowrap>Объединение строк</td>
+                        <td>Ячейка</td>
+                        <td>Ячейка</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Объединение столбцов</td>
+                    </tr>
+                </tbody>
+
+                <tfoot align="center" valign="middle">
+                    <tr>
+                        <td colspan="2">Итого</td>
+                        <td>40 BYN</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+        <section id="forms">
+            <h2>6. Формы и элементы управления</h2>
+
+            <form id="demo-form"
+                  action="{% url 'web_reference' %}"
+                  method="post"
+                  accept-charset="UTF-8"
+                  autocomplete="on"
+                  enctype="application/x-www-form-urlencoded"
+                  name="demo-form"
+                  novalidate
+                  target="_self">
+                {% csrf_token %}
+
+                <fieldset title="Демонстрационная группа"> <!--группирует связанные элементы формы-->
+                    <legend>Данные пользователя</legend>
+
+                    <label for="demo-text">Текст:</label>
+                    <input id="demo-text" type="text" name="demo_text"
+                           value="Пример"
+                           size="20"
+                           maxlength="30"
+                           autocomplete="on"
+                           placeholder="Введите текст"
+                           required
+                           autofocus>
+
+                    <br>
+
+                    <label for="demo-password">Пароль:</label>
+                    <input id="demo-password" type="password" name="demo_password"
+                           maxlength="20" readonly value="readonly">
+
+                    <br>
+
+                    <input type="radio" id="sex-m" name="sex" value="male" checked>
+                    <label for="sex-m">Мужской</label>
+
+                    <input type="radio" id="sex-f" name="sex" value="female">
+                    <label for="sex-f">Женский</label>
+
+                    <br>
+
+                    <input type="checkbox" id="bike" name="vehicle" value="Bike" checked>
+                    <label for="bike">Велосипед</label>
+
+                    <input type="checkbox" id="car" name="vehicle" value="Car">
+                    <label for="car">Автомобиль</label>
+
+                    <br>
+
+                    <input type="hidden" name="hidden_value" value="demo">
+
+                    <label for="demo-file">Файл:</label>
+                    <input id="demo-file" type="file"
+                           name="fileinput"
+                           accept="image/jpeg,image/png,image/gif">
+
+                    <br>
+
+                    <label for="demo-color">Цвет:</label>
+                    <input id="demo-color" type="color" name="color">
+
+                    <label for="demo-date">Дата:</label>
+                    <input id="demo-date" type="date" name="date">
+
+                    <label for="demo-datetime">Дата и время:</label>
+                    <input id="demo-datetime" type="datetime" name="datetime">
+
+                    <label for="demo-local">Местная дата и время:</label>
+                    <input id="demo-local" type="datetime-local" name="datetime_local">
+
+                    <label for="demo-email">E-mail:</label>
+                    <input id="demo-email" type="email" name="email"
+                           pattern="[^ @]+@[^ @]+\.[^ @]+">
+
+                    <label for="demo-number">Число:</label>
+                    <input id="demo-number" type="number" name="number"
+                           min="1" max="100" step="1">
+
+                    <label for="demo-range">Диапазон:</label>
+                    <input id="demo-range" type="range" name="range"
+                           min="10" max="20" step="1">
+
+                    <label for="demo-search">Поиск:</label>
+                    <input id="demo-search" type="search" name="search">
+
+                    <label for="demo-tel">Телефон:</label>
+                    <input id="demo-tel" type="tel" name="tel">
+
+                    <label for="demo-time">Время:</label>
+                    <input id="demo-time" type="time" name="time">
+
+                    <label for="demo-url">URL:</label>
+                    <input id="demo-url" type="url" name="url">
+
+                    <label for="demo-month">Месяц:</label>
+                    <input id="demo-month" type="month" name="month">
+
+                    <label for="demo-week">Неделя:</label>
+                    <input id="demo-week" type="week" name="week">
+
+                    <label for="demo-area">Описание:</label>
+                    <textarea id="demo-area" name="description"
+                              cols="45" rows="5"
+                              maxlength="450"
+                              placeholder="Введите описание"
+                              required></textarea>
+
+                    <br>
+
+                    <label for="demo-select">Город:</label>
+                    <select id="demo-select" name="city" size="3" multiple>
+                        <option disabled>Выберите город</option>
+                        <optgroup label="Беларусь">
+                            <option value="minsk" selected>Минск</option>
+                            <option value="brest">Брест</option>
+                        </optgroup>
+                        <optgroup label="Другие">
+                            <option value="moscow">Москва</option>
+                        </optgroup>
+                    </select>
+
+                    <select name="disabled-select" disabled>
+                        <option>Заблокированный select</option>
+                    </select>
+
+                    <br>
+
+                    <label for="demo-datalist">Фрукт:</label>
+                    <input id="demo-datalist" name="fruit"
+                           list="fruit-list">
+                    <datalist id="fruit-list">
+                        <option value="Яблоко" label="Apple">
+                        <option value="Апельсин">
+                        <option value="Вишня">
+                    </datalist>
+
+                    <br>
+
+                    <input type="image"
+                           name="image_submit"
+                           src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                           alt="Отправить изображением"
+                           width="90" height="60">
+
+                    <br>
+
+                    <input type="button" name="ordinary_button"
+                           value="Обычная кнопка"
+                           accesskey="b">
+
+                    <button type="button" name="rich_button"
+                            title="Кнопка с содержимым">
+                        <strong>Универсальная кнопка</strong>
+                    </button>
+
+                    <button type="submit"
+                            formaction="{% url 'web_reference' %}"
+                            formenctype="application/x-www-form-urlencoded"
+                            formmethod="post"
+                            formnovalidate
+                            formtarget="_self">
+                        Отправить
+                    </button>
+
+                    <input type="reset" name="reset_button" value="Сбросить">
+                </fieldset>
+            </form>
+
+            <!-- Поле за пределами формы, связанное с ней через form=id -->
+            <input id="external-demo-input" type="text" name="external_value"
+                   value="Поле связано с demo-form"
+                   form="demo-form" disabled>
+        </section>
+
+        <section id="images">
+            <h2>7. Изображения и адаптивные изображения</h2>
+
+            <img src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                 alt="Логотип PizzaTime"
+                 title="PizzaTime"
+                 width="180"
+                 height="120"
+                 longdesc="#image-description"
+                 ismap>
+
+            <p id="image-description">
+                Подробное текстовое описание изображения.
+            </p>
+
+            <picture>
+                <source media="(max-width: 600px)"
+                        srcset="{% static 'partner_logos/pizzatime_logo.png' %}">
+                <source media="(min-width: 601px)"
+                        srcset="{% static 'partner_logos/pizzatime_logo.png' %}">
+                <img src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                     srcset="{% static 'partner_logos/pizzatime_logo.png' %} 1x,
+                             {% static 'partner_logos/pizzatime_logo.png' %} 2x"
+                     sizes="(max-width: 600px) 100vw, 180px"
+                     alt="Адаптивное изображение">
+            </picture>
+
+            <!-- Устаревшие атрибуты -->
+            <img src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                 alt="Демонстрация старых атрибутов"
+                 align="right" hspace="10" vspace="10" border="1"
+                 width="100" height="70">
+        </section>
+
+        <section id="frames">
+            <h2>8. Фреймы и встроенные объекты</h2>
+
+            <iframe name="demo-frame"
+                    width="400"
+                    height="120"
+                    src="{% url 'about' %}"
+                    srcdoc="<p>HTML внутри srcdoc.</p>"
+                    sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts">
+                Ваш браузер не поддерживает iframe.
+            </iframe>
+
+            <p>
+                <a href="{% url 'about' %}" target="demo-frame">
+                    Загрузить страницу в iframe
+                </a>
+            </p>
+
+            <embed src="{% static 'partner_logos/pizzatime_logo.png' %}"
+                   type="image/png"
+                   width="120" height="80"
+                   hidden="false"
+                   pluginspage="https://example.com/plugin"
+                   align="middle" hspace="5" vspace="5"
+                   allowfullscreen="true">
+
+            <object data="{% static 'partner_logos/pizzatime_logo.png' %}"
+                    type="image/png"
+                    width="120" height="80"
+                    form="demo-form"
+                    name="demo-object"
+                    align="middle" hspace="5" vspace="5"
+                    classid="demo-classid"
+                    code="demo-code"
+                    codebase="/"
+                    codetype="text/plain">
+                <param name="allowFullScreen" value="true">
+                <p>Резервный текст object.</p>
+            </object>
+        </section>
+
+        <section id="media">
+            <h2>9. Видео, аудио и текстовые дорожки</h2>
+
+            <video width="480"
+                   height="270"
+                   controls
+                   preload="metadata"
+                   muted
+                   loop
+                   poster="{% static 'partner_logos/pizzatime_logo.png' %}">
+                <track kind="subtitles"
+                       src=""
+                       srclang="ru"
+                       label="Русский"
+                       default>
+                <source src="{% static 'pizza.mp4' %}" type="video/mp4">
+                Ваш браузер не поддерживает video.
+            </video>
+
+            <audio src="{% static 'pizza.mp4' %}" controls preload="metadata" muted loop>
+                <source src="" type="audio/ogg">
+                <source src="" type="audio/mpeg">
+                <source src="" type="audio/wav">
+                Ваш браузер не поддерживает audio.
+            </audio>
+        </section>
+
+        <section id="microdata">
+            <h2>10. Микроданные</h2>
+
+            <div class="microdata-card"
+                 itemscope
+                 itemtype="https://schema.org/Restaurant"
+                 itemid="#pizzatime-restaurant"
+                 itemref="micro-extra">
+                <h3 itemprop="name">PizzaTime</h3>
+
+                <span itemprop="servesCuisine">Пицца</span><br>
+                <span itemprop="telephone">+375 29 123-45-67</span><br>
+
+                <a itemprop="url" href="{% url 'index' %}">
+                    Сайт PizzaTime
+                </a>
+
+                <time itemprop="openingHours"
+                      datetime="10:00">10:00</time> —
+                <time datetime="23:00">23:00</time>
+            </div>
+
+            <div id="micro-extra">
+                <span itemprop="address">Минск</span>
+                <span itemprop="priceRange">$$</span>
+            </div>
+
+            <p>
+                Здесь все основные атрибуты микроданных:
+                <code>itemscope</code>,
+                <code>itemtype</code>,
+                <code>itemprop</code>,
+                <code>itemref</code>,
+                <code>itemid</code>.
+            </p>
+        </section>
+
+        <section id="global-attributes">
+            <h2>11. Глобальные атрибуты и события</h2>
+
+            <p id="global-demo"
+               class="demo-global"
+               style="padding:5px"
+               title="Глобальные атрибуты"
+               accesskey="g"
+               tabindex="2"
+               dir="ltr"
+               lang="ru"
+               contenteditable="false"
+               spellcheck="false"
+               translate="yes"
+               draggable="false"
+               dropzone="copy">
+                
+            </p>
+
+            <p hidden>Скрытый элемент для демонстрации hidden.</p>
+
+            <!-- Все события.
+                 Обработчики для демонстрации атрибутов. -->
+            <div id="events-demo"
+                 onabort="void 0"
+                 onblur="void 0"
+                 oncancel="void 0"
+                 oncanplay="void 0"
+                 oncanplaythrough="void 0"
+                 onchange="void 0"
+                 onclick="void 0"
+                 oncuechange="void 0"
+                 ondblclick="void 0"
+                 ondurationchange="void 0"
+                 onemptied="void 0"
+                 onended="void 0"
+                 onerror="void 0"
+                 onfocus="void 0"
+                 oninput="void 0"
+                 oninvalid="void 0"
+                 onkeydown="void 0"
+                 onkeypress="void 0"
+                 onkeyup="void 0"
+                 onload="void 0"
+                 onloadeddata="void 0"
+                 onloadedmetadata="void 0"
+                 onloadstart="void 0"
+                 onmousedown="void 0"
+                 onmouseenter="void 0"
+                 onmouseleave="void 0"
+                 onmousemove="void 0"
+                 onmouseout="void 0"
+                 onmouseover="void 0"
+                 onmouseup="void 0"
+                 onmousewheel="void 0"
+                 onpause="void 0"
+                 onplay="void 0"
+                 onplaying="void 0"
+                 onprogress="void 0"
+                 onratechange="void 0"
+                 onreset="void 0"
+                 onresize="void 0"
+                 onscroll="void 0"
+                 onseeked="void 0"
+                 onseeking="void 0"
+                 onselect="void 0"
+                 onshow="void 0"
+                 onstalled="void 0"
+                 onsubmit="void 0"
+                 onsuspend="void 0"
+                 ontimeupdate="void 0"
+                 ontoggle="void 0"
+                 onvolumechange="void 0"
+                 onwaiting="void 0">
+                Событийные атрибуты.
+            </div>
+        </section>
+
+        <section id="metadata">
+            <h2>12. Метаданные и служебные элементы</h2>
+            <p>
+                В основном документе метаданные уже находятся в
+                <code>head</code>. Для демонстрации
+                <code>base</code> используется этот фрагмент:
+            </p>
+            <pre>&lt;base href="/" target="_self"&gt;</pre>
+            <noscript>
+                JavaScript отключён или не поддерживается браузером.
+            </noscript>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            Конец демонстрационной страницы.
+            <a href="#top">Вернуться вверх</a>
+        </p>
+    </footer>
+</div>
+{% endblock %}

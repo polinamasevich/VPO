@@ -1,0 +1,2 @@
+{% extends 'base.html' %}
+{% block content %}<section><h1>Заказ принят</h1><p>Спасибо, {{ order.full_name }}! Мы свяжемся с вами по номеру {{ order.phone }}.</p><p>Способ получения: <strong>{{ fulfillment_label }}</strong></p>{% if promo %}<p>Промокод {{ promo.code }}: скидка {{ promo.discount }}% (−{{ discount|floatformat:2 }} BYN).</p>{% endif %}<p>К оплате: <strong>{{ final_total|floatformat:2 }} BYN</strong></p><p><a href="{% url 'item_list' %}">Вернуться в меню</a></p></section>{% endblock %}

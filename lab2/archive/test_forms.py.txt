@@ -1,0 +1,90 @@
+from datetime import date, timedelta
+from unittest.mock import patch
+
+from django.test import SimpleTestCase, TestCase
+
+from main.forms import CheckoutForm, ReviewForm, ExtendedRegistrationForm
+
+
+class CheckoutFormTests(SimpleTestCase):
+    def valid_data(self, **overrides):
+        data = {
+            'full_name': 'Анна Иванова',
+            'phone': '+375291234567',
+            'email': 'anna@example.com',
+            'fulfillment_method': 'pickup',
+            'address': '',
+            'payment_method': 'card',
+            'promo_code': '',
+            'comment': '',
+            'agree': 'on',
+        }
+        data.update(overrides)
+        return data
+
+    def test_pickup_without_address_is_valid(self):
+        form = CheckoutForm(self.valid_data())
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_delivery_requires_address(self):
+        form = CheckoutForm(self.valid_data(fulfillment_method='delivery'))
+        self.assertFalse(form.is_valid())
+        self.assertIn('address', form.errors)
+
+    def test_delivery_with_address_is_valid(self):
+        form = CheckoutForm(self.valid_data(fulfillment_method='delivery', address='Минск, ул. Ленина, 1'))
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_agreement_is_required(self):
+        data = self.valid_data()
+        data.pop('agree')
+        self.assertFalse(CheckoutForm(data).is_valid())
+
+    def test_invalid_email_and_choice_are_rejected(self):
+        for overrides in ({'email': 'not-an-email'}, {'payment_method': 'crypto'}):
+            with self.subTest(overrides=overrides):
+                self.assertFalse(CheckoutForm(self.valid_data(**overrides)).is_valid())
+
+
+class ReviewFormTests(SimpleTestCase):
+    def test_text_must_have_at_least_five_characters(self):
+        for text, expected in [('Вкусно', True), ('Нет', False)]:
+            with self.subTest(text=text):
+                form = ReviewForm({'rating': 5, 'text': text})
+                self.assertEqual(form.is_valid(), expected)
+
+    def test_rating_is_limited_to_one_through_five(self):
+        for rating, expected in [(1, True), (5, True), (0, False), (6, False)]:
+            with self.subTest(rating=rating):
+                self.assertEqual(ReviewForm({'rating': rating, 'text': 'Хорошо!'}).is_valid(), expected)
+
+
+class RegistrationFormTests(TestCase):
+    def valid_data(self, **overrides):
+        data = {
+            'username': 'anna',
+            'phone_number': '+375(29)1234567',
+            'birth_date': (date.today() - timedelta(days=365 * 25)).isoformat(),
+            'password': 'Strong-password-123',
+        }
+        data.update(overrides)
+        return data
+
+    def test_valid_adult_registration_data_is_accepted(self):
+        self.assertTrue(ExtendedRegistrationForm(self.valid_data()).is_valid())
+
+    def test_invalid_phone_is_rejected(self):
+        self.assertFalse(ExtendedRegistrationForm(self.valid_data(phone_number='+375291234567')).is_valid())
+
+    def test_underage_registration_is_rejected(self):
+        recent_birthday = date.today() - timedelta(days=17 * 365)
+        self.assertFalse(ExtendedRegistrationForm(self.valid_data(birth_date=recent_birthday.isoformat())).is_valid())
+
+    def test_save_hashes_password(self):
+        form = ExtendedRegistrationForm(self.valid_data())
+        self.assertTrue(form.is_valid())
+        with patch('main.forms.User.save') as save:
+            user = form.save(commit=False)
+        self.assertNotEqual(user.password, 'Strong-password-123')
+        self.assertTrue(user.check_password('Strong-password-123'))
+        save.assert_not_called()

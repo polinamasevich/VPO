@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ news.title }} — PizzaTime{% endblock %}
+{% block content %}
+<article class="content-block news-article">
+    <p><a href="{% url 'news_list' %}">← Все новости</a></p>
+    <h1>{{ news.title }}</h1>
+    <p><time datetime="{{ news.created_at|date:'c' }}">{{ news.created_at|date:"d.m.Y H:i" }}</time></p>
+    <div class="news-article-text">
+        {% if news.image %}
+            <figure class="news-article-float">
+                <img class="news-detail-image" src="{{ news.image.url }}" alt="{{ news.title }}">
+            </figure>
+        {% endif %}
+        {{ news.text|linebreaks }}
+    </div>
+</article>
+{% endblock %}

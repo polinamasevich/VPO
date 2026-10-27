@@ -1,0 +1,98 @@
+/tmp/igi-lab-tools/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 43 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, main, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying main.0001_initial... OK
+  Applying main.0002_companyinfo_logo_contact_photo_alter_contact_phone_and_more... OK
+  Applying main.0003_promocode_description_alter_promocode_discount... OK
+  Applying main.0004_dictionary_delete_term... OK
+  Applying main.0005_alter_dictionary_options_remove_companyinfo_logo_and_more... OK
+  Applying main.0006_alter_dictionary_options_serviceitem_image... OK
+  Applying main.0007_companyinfo_image_contact_image... OK
+  Applying main.0008_serviceitem_category_alter_category_name_and_more... OK
+  Applying main.0009_alter_category_options_alter_companyinfo_options_and_more... OK
+  Applying main.0010_partner_companyinfo_certificate_text_and_more... OK
+  Applying main.0011_seed_partners... OK
+  Applying main.0012_review_user... OK
+  Applying main.0013_update_partner_links... OK
+  Applying main.0014_companyhistory... OK
+  Applying main.0015_news_short_text... OK
+  Applying main.0016_seed_lab2_news... OK
+  Applying sessions.0001_initial... OK
+Matplotlib is building the font cache; this may take a moment.
+System check identified no issues (0 silenced).
+test_D01_anonymous_review_post_must_not_return_500 (lab2.tests.defects.test_known_defects.KnownDefectTests) ... /Users/polixvim/Library/Python/3.9/lib/python/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/polixvim/Documents/igi_lab5/staticfiles/
+  mw_instance = middleware(adapted_handler)
+expected failure
+test_D02_stats_with_category_must_render (lab2.tests.defects.test_known_defects.KnownDefectTests) ... expected failure
+test_D03_invalid_category_must_not_return_500 (lab2.tests.defects.test_known_defects.KnownDefectTests) ... expected failure
+test_D04_get_must_not_delete_review (lab2.tests.defects.test_known_defects.KnownDefectTests) ... expected failure
+test_invalid_scheme_makes_no_http_request (lab2.tests.integration.test_http.PartnerHTTPIntegrationTests) ... ok
+test_partner_http_statuses (lab2.tests.integration.test_http.PartnerHTTPIntegrationTests) ... ok
+test_transport_failure_and_timeout (lab2.tests.integration.test_http.PartnerHTTPIntegrationTests) ... ok
+test_information_pages_display_database_content (lab2.tests.integration.test_site.PagesIntegrationTests) ... ok
+test_news_limit_and_order (lab2.tests.integration.test_site.PagesIntegrationTests) ... ok
+test_static_and_auth_pages_render (lab2.tests.integration.test_site.PagesIntegrationTests) ... ok
+test_active_promo_calculates_discount_case_insensitively (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_cart_total_from_database_and_sessions_are_isolated (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_catalog_filters_category (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_catalog_sort_orders (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_csrf_rejects_post_without_token (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_deleting_category_preserves_product (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_empty_checkout_redirect (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_get_cannot_add_to_cart (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_invalid_promos_preserve_cart (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_login_success_failure_and_logout (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_model_labels (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_product_detail_and_missing_product (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_registration_persists_user_and_creates_session (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_registration_rejects_duplicate_username (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_statistics_for_products_without_categories (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_statistics_guest_and_regular_user_cannot_access (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_statistics_with_no_products (lab2.tests.integration.test_site.SiteIntegrationTests) ... ok
+test_cart_quantity_transitions (lab2.tests.scenarios.test_lifecycle.CartScenarioTests) ... ok
+test_checkout_error_corrected_then_success (lab2.tests.scenarios.test_lifecycle.CartScenarioTests) ... ok
+test_invalid_create_and_edit_do_not_change_state (lab2.tests.scenarios.test_lifecycle.ReviewLifecycleTests) ... ok
+test_review_created_edited_deleted_by_owner (lab2.tests.scenarios.test_lifecycle.ReviewLifecycleTests) ... ok
+test_staff_can_edit_and_delete_another_users_review (lab2.tests.scenarios.test_lifecycle.ReviewLifecycleTests) ... ok
+test_stranger_cannot_change_published_review (lab2.tests.scenarios.test_lifecycle.ReviewLifecycleTests) ... ok
+test_cart_total_filters_corrupted_session_with_mocked_database (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_cart_total_handles_non_dictionary_session (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_checkout_delivery_and_pickup (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_checkout_invalid_fields (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_password_hash_and_commit_behavior_with_mocked_repository (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_phone_validator_raises_on_invalid_input (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_registration_age_boundary_with_mocked_clock (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_registration_phone_format (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_review_rating_boundaries (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+test_review_text_boundary (lab2.tests.unit.test_forms.FormsUnitTests) ... ok
+
+----------------------------------------------------------------------
+Ran 43 tests in 0.259s
+
+OK (expected failures=4)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

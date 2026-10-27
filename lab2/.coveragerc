@@ -1,0 +1,20 @@
+[run]
+source = main, lab2.integrations
+data_file = lab2/reports/.coverage
+omit =
+    */migrations/*
+    */tests.py
+    */tests/*
+    */apps.py
+    */urls.py
+
+[report]
+show_missing = True
+precision = 2
+fail_under = 70
+
+[html]
+directory = lab2/reports/html
+
+[json]
+output = lab2/reports/coverage.json
